@@ -1,17 +1,23 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "map.h"
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(10000, 10000), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
-sf::Texture texture1;
-texture1.loadFromFile("electricity.jpg");
-sf::Sprite background(texture1);
+//sf::Texture texture1;
+//texture1.loadFromFile("electricity.jpg");
+//sf::Sprite background(texture1);
 int flag = 0;
 int c = 0;
-window.draw(background);
+//window.draw(background);
+
+GameMap m;
+m.LoadBackgorund(window);
+m.SetMapdata(window);
     while (window.isOpen())
     {
         sf::Event event;
@@ -41,15 +47,15 @@ else {
     }
 }*/
         
-if (0 < event.mouseButton.x && event.mouseButton.x < 100 && event.type == sf::Event::MouseButtonPressed && flag == 0) {
-    shape.move(10, 10);
+if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
+    m.DestroyMap(window, event.mouseButton.x, event.mouseButton.y);
     flag++;
 }
-if (0 < event.mouseButton.x && event.mouseButton.x < 100 && event.type == sf::Event::MouseButtonReleased && flag == 1) {
+if (event.type == sf::Event::MouseButtonReleased && flag == 1) {
     flag--;
 }
 
-        window.draw(shape);
+        //window.draw(shape);
         window.display();
     }
 
