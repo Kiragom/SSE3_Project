@@ -11,21 +11,23 @@ enum pressed_key{
     Pressed_a,
     Pressed_s,
     Pressed_space,
+    Pressed_up_right,
+    Pressed_up_left
 };
 
 class Key_control{
     private:
         int state = Default;
-        void check_up_key();
-        void check_right_key();
-        void check_left_key();
-        void check_esc_key();
-        void check_a_key();
-        void check_s_key();
-        void check_space_key();
+        bool check_up_key();
+        bool check_right_key();
+        bool check_left_key();
+        bool check_esc_key();
+        bool check_a_key();
+        bool check_s_key();
+        bool check_space_key();
 
     public:
-        int get_cur_key();
+        int get_cur_state();
 };
 
 #endif
