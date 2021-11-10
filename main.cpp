@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "map.h"
+#include "player.h"
 
 int main()
 {
@@ -16,8 +17,12 @@ int c = 0;
 //window.draw(background);
 
 GameMap m;
+GamePlayer p;
 m.LoadBackgorund(window);
 m.SetMapdata(window);
+p.LoadCharacter();
+p.SetPlayerPosition(800, 400);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -46,16 +51,21 @@ else {
         //std::cout << c << "\n";
     }
 }*/
+
+        
         
 if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
-    m.DestroyMap(window, event.mouseButton.x, event.mouseButton.y);
+    window.clear();
+    m.LoadBackgorund(window);
+    //m.SetMapdata(window);
+    p.test();
     flag++;
 }
 if (event.type == sf::Event::MouseButtonReleased && flag == 1) {
     flag--;
 }
 
-        //window.draw(shape);
+        p.DrawPlayerPosition(window);
         window.display();
     }
 
