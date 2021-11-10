@@ -26,8 +26,8 @@ int main()
                 window.close();
 
             if (event.type == sf::Event::KeyPressed){
-                missile1.set_missile(window, 800, 400);
-                missile1.launch_missile(background, window, 50, 45);
+                missile1.set_missile(window, 0, 400, Arc);
+                missile1.launch_missile(background, window, 100, 45);
                 switch(key_con.get_cur_state()){
                     case Pressed_up_right:
                         printf("pressed_up_right\n");

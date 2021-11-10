@@ -4,6 +4,7 @@
 
 #define MAX_DIST 100
 #define PI 3.1415926535
+#define GRAVITY 74
 
 void Missile::update_pos(float delta_x, float delta_y){
     pos_x = pos_x + delta_x;
@@ -15,13 +16,12 @@ void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, fl
     sf::Clock timer;
 
     state = Flight;
-    float interval = 0, limit = 2;
-    const sf::Time ai_time = sf::seconds(0.05f);
+    float interval = 0, limit = 4, check_point = 0;
+    const sf::Time show_time = sf::seconds(0.1f);
 
     power = power_; angle = angle_;
-    init_x_v = MAX_DIST * (power / 100) * cos((angle_ * PI) / 180);
-    init_y_v = MAX_DIST * (power / 100) * sin((angle_ * PI) / 180);
-
+    cur_x_v = MAX_DIST * (power / 100) * cos((angle_ * PI) / 180);
+    cur_y_v = MAX_DIST * (power / 100) * sin((angle_ * PI) / 180);
     while(1){
         //초단위로 경과시간을 구함
         //밀리초는 asMilliseconds(), 마이크로초의 asMicroseconds()메소드 이용
@@ -31,15 +31,25 @@ void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, fl
         interval += time;
  
         //0.5초 마다 timer 재시작
-        if (timer.getElapsedTime() > ai_time){
+        if (timer.getElapsedTime() > show_time){
             timer.restart();
-            float delta_x = init_x_v;
-            float delta_y = init_y_v - 74 * interval;
+            if(fire_mode == Arc){
+                cur_y_v -= GRAVITY * (interval - check_point);
+            }
+            else{
+                if((pos_x < 0 && pos_y >= 0) || (pos_x >= 1600 && pos_y >= 0)){
+                    cur_x_v = -cur_x_v;
+                }
+                else if((pos_x >= 0 && pos_y < 0) || (pos_x >= 0 && pos_y >= 800)){
+                    cur_y_v = -cur_y_v;
+                }
+            }
             window.clear();
             window.draw(background);
-            update_pos(delta_x, delta_y);
+            update_pos(cur_x_v, cur_y_v);
             draw_missile(window);
             window.display();
+            check_point = interval;
         }
 
         if(interval > limit) break;
@@ -48,11 +58,12 @@ void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, fl
     state = Explosion;
 }
 
-void Missile::set_missile(sf::RenderWindow &window, float pos_x_, float pos_y_){
+void Missile::set_missile(sf::RenderWindow &window, float pos_x_, float pos_y_, int fire_mode_){
     sf::CircleShape shape(5.0f);
     shape.setFillColor(sf::Color::White);
     state = Ready;
     pos_x = pos_x_; pos_y = pos_y_;
+    fire_mode = fire_mode_;
 
     shape.setPosition(sf::Vector2f(pos_x, pos_y));
     window.draw(shape);
