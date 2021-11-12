@@ -68,7 +68,7 @@ if (event.type == sf::Event::KeyReleased && flag == 1) {
 if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
     window.clear();
     //m.LoadBackgorund(window);
-    m.DestroyMap()
+    m.DestroyMap(window, event.mouseButton.x, event.mouseButton.y);
     m.LoadMapdata(window, 1);
     flag++;
 }

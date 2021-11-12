@@ -2,17 +2,15 @@
 
 void GameMap::LoadBackgorund(sf::RenderWindow &window) {
     background_image.loadFromFile(BACKGROUND_FILE);
-    background = sf::Sprite(background_image);
-    //window.draw(background);
+    //background = sf::Sprite(background_image);
+    background.setTexture(background_image);
+
+    screen.create(1600,800);
+    screen.clear();
+    screen.draw(background);
 }
 
 void GameMap::SetMapdata(sf::RenderWindow &window) {
-    rtexture.create(1600,800);
-    rtexture.clear();
-    rtexture.draw(background);
-    //tmp = rtexture.getTexture();
-    //background = sf::Sprite(tmp);
-//window.draw(background);
     for (int x = 0;x <= 1600;x++) {
         for (int y = 0;y <= 800;y++) {
             if (y < 400) mapdata[x][y] = 0;
@@ -26,26 +24,22 @@ void GameMap::SetMapdata(sf::RenderWindow &window) {
             if (mapdata[x][y]) {
                 vertex.position = sf::Vector2f(x, y);
                 vertex.color = sf::Color::Green;
-                rtexture.draw(&vertex, 1, sf::Points);
+                screen.draw(&vertex, 1, sf::Points);
             }
         }
     }
-rtexture.display();
-tmp = rtexture.getTexture();
-SS = sf::Sprite(tmp);
-window.draw(SS);
 
-    //tmp = rtexture.getTexture();
-    //background.setTexture(tmp);
-    //background.rotate(45);
-    //window.draw(background);
-    //rtexture.display();
+    screen.display();
+    screen_image = screen.getTexture();
+    //sprite = sf::Sprite(screen_image);
+    sprite.setTexture(screen_image);
+    window.draw(sprite);
 }
 
-void GameMap::LoadMapdata(sf::RenderWindow &window, int option) {
-    if (option) {
-        rtexture.clear();
-        rtexture.draw(background);
+void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
+    if (DELETE) {
+        screen.clear();
+        screen.draw(background);
 
         sf::Vertex vertex;
         for (int x = 0;x <= 1600;x++) {
@@ -53,43 +47,34 @@ void GameMap::LoadMapdata(sf::RenderWindow &window, int option) {
                 if (mapdata[x][y]) {
                     vertex.position = sf::Vector2f(x, y);
                     vertex.color = sf::Color::Green;
-                    rtexture.draw(&vertex, 1, sf::Points);
+                    screen.draw(&vertex, 1, sf::Points);
                 }
             }
         }
 
-        rtexture.display();
-        tmp = rtexture.getTexture();
-        SS = sf::Sprite(tmp);
-        window.draw(SS);
+        screen.display();
+        screen_image = screen.getTexture();
+        //sprite = sf::Sprite(screen_image);
+        sprite.setTexture(screen_image);
+        window.draw(sprite);
     }
 
-    else window.draw(SS);
+    else window.draw(sprite);
 }
 
 void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
     int distance;
-    sf::Vertex vertex;
-    sf::CircleShape shape(25);
-    shape.setPosition(posx-25, posy-25);
-    shape.setTexture(&background_image);
-    shape.setTextureRect(sf::IntRect(posx-25, posy-25, posx+25, posy+25));
 
-    for (int x = posx - 50;x < posx + 50;x++) {
-        for (int y = posy - 50;y < posy + 50;y++) {
+    for (int x = posx - 40;x <= posx + 40;x++) {
+        for (int y = posy - 40;y <= posy + 40;y++) {
             if (x < 0 || x > MAX_MAP_POSX) continue;
             if (y < 0 || y > MAX_MAP_POSY) continue;
             if (!mapdata[x][y]) continue;
 
             distance = (x - posx)*(x - posx) + (y - posy)*(y - posy);
-            if (distance <= 2500) {
+            if (distance <= 1600) {
                 mapdata[x][y] = 0;
-                //vertex.position = sf::Vector2f(x, y);
-                //vertex.color = sf::Color::White;
-                //window.draw(&vertex, 1, sf::Points);
             }
         }
     }
-
-    window.draw(shape);
 }
