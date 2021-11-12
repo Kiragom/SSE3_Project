@@ -54,16 +54,29 @@ else {
 
         
         
+if (event.type == sf::Event::KeyPressed && flag == 0) {
+    window.clear();
+    //m.LoadBackgorund(window);
+    m.LoadMapdata(window, 0);
+    p.test();
+    flag++;
+}
+if (event.type == sf::Event::KeyReleased && flag == 1) {
+    flag--;
+}
+
 if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
     window.clear();
-    m.LoadBackgorund(window);
-    //m.SetMapdata(window);
-    p.test();
+    //m.LoadBackgorund(window);
+    m.DestroyMap()
+    m.LoadMapdata(window, 1);
     flag++;
 }
 if (event.type == sf::Event::MouseButtonReleased && flag == 1) {
     flag--;
 }
+
+
 
         p.DrawPlayerPosition(window);
         window.display();

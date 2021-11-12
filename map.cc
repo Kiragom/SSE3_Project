@@ -3,10 +3,16 @@
 void GameMap::LoadBackgorund(sf::RenderWindow &window) {
     background_image.loadFromFile(BACKGROUND_FILE);
     background = sf::Sprite(background_image);
-    window.draw(background);
+    //window.draw(background);
 }
 
 void GameMap::SetMapdata(sf::RenderWindow &window) {
+    rtexture.create(1600,800);
+    rtexture.clear();
+    rtexture.draw(background);
+    //tmp = rtexture.getTexture();
+    //background = sf::Sprite(tmp);
+//window.draw(background);
     for (int x = 0;x <= 1600;x++) {
         for (int y = 0;y <= 800;y++) {
             if (y < 400) mapdata[x][y] = 0;
@@ -20,23 +26,45 @@ void GameMap::SetMapdata(sf::RenderWindow &window) {
             if (mapdata[x][y]) {
                 vertex.position = sf::Vector2f(x, y);
                 vertex.color = sf::Color::Green;
-                window.draw(&vertex, 1, sf::Points);
+                rtexture.draw(&vertex, 1, sf::Points);
             }
         }
     }
+rtexture.display();
+tmp = rtexture.getTexture();
+SS = sf::Sprite(tmp);
+window.draw(SS);
+
+    //tmp = rtexture.getTexture();
+    //background.setTexture(tmp);
+    //background.rotate(45);
+    //window.draw(background);
+    //rtexture.display();
 }
 
-void GameMap::LoadMapdata(sf::RenderWindow &window) {
-    sf::Vertex vertex;
-    for (int x = 0;x <= 1600;x++) {
-        for (int y = 0;y <= 800;y++) {
-            if (mapdata[x][y]) {
-                vertex.position = sf::Vector2f(x, y);
-                vertex.color = sf::Color::Green;
-                window.draw(&vertex, 1, sf::Points);
+void GameMap::LoadMapdata(sf::RenderWindow &window, int option) {
+    if (option) {
+        rtexture.clear();
+        rtexture.draw(background);
+
+        sf::Vertex vertex;
+        for (int x = 0;x <= 1600;x++) {
+            for (int y = 0;y <= 800;y++) {
+                if (mapdata[x][y]) {
+                    vertex.position = sf::Vector2f(x, y);
+                    vertex.color = sf::Color::Green;
+                    rtexture.draw(&vertex, 1, sf::Points);
+                }
             }
         }
+
+        rtexture.display();
+        tmp = rtexture.getTexture();
+        SS = sf::Sprite(tmp);
+        window.draw(SS);
     }
+
+    else window.draw(SS);
 }
 
 void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
