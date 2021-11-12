@@ -44,8 +44,8 @@ void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, fl
                     cur_y_v = -cur_y_v;
                 }
             }
-            window.clear();
-            window.draw(background);
+            //window.clear();
+            //window.draw(background);
             update_pos(cur_x_v, cur_y_v);
             draw_missile(window);
             window.display();

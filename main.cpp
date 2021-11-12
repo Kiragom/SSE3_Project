@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "key_control.h"
 #include "missile.h"
+#include "indicator.h"
 #include <iostream>
 
 int main()
@@ -11,6 +12,8 @@ int main()
     Missile missile1;
     //shape.setFillColor(sf::Color::Green);
     sf::Texture texture1;
+    Bar hp_bar;
+    
     texture1.loadFromFile("electricity.jpg");
     sf::Sprite background(texture1);
     int flag = 0;
@@ -26,8 +29,15 @@ int main()
                 window.close();
 
             if (event.type == sf::Event::KeyPressed){
-                missile1.set_missile(window, 0, 400, Arc);
-                missile1.launch_missile(background, window, 100, 45);
+                hp_bar.set_max_val(1000);
+                hp_bar.set_cur_val(300);
+                hp_bar.set_pos(0, 400);
+                hp_bar.set_size(30, 15);
+                hp_bar.draw_bar(window, sf::Color::White, sf::Color::Red);
+
+                //missile1.set_missile(window, 0, 400, Arc);
+                //missile1.launch_missile(background, window, 100, 45);
+
                 switch(key_con.get_cur_state()){
                     case Pressed_up_right:
                         printf("pressed_up_right\n");

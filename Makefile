@@ -1,6 +1,6 @@
 CC = g++
 TARGET = sfml
-OBJS = main.o key_control.o missile.o
+OBJS = main.o key_control.o missile.o indicator.o
 
 $(TARGET) : $(OBJS)
 	$(CC) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
@@ -12,6 +12,9 @@ key_control.o : key_control.cc
 	$(CC) -c $<
 
 missile.o : missile.cc
+	$(CC) -c $<
+
+indicator.o : indicator.cc
 	$(CC) -c $<
 
 clean : 
