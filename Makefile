@@ -15,4 +15,4 @@ player.o : player.cc
 	$(CC) -c $<
 
 clean : 
-	rm -f *.0 sfml
+	rm -f *.o sfml

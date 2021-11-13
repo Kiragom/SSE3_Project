@@ -19,6 +19,9 @@ void GameMap::SetMapdata(sf::RenderWindow &window) {
     }
 
     sf::Vertex vertex;
+    sf::Sprite a;
+    //a.
+    //test_image.loadFromFile("test.jpg");
     for (int x = 0;x <= 1600;x++) {
         for (int y = 0;y <= 800;y++) {
             if (mapdata[x][y]) {
@@ -31,7 +34,6 @@ void GameMap::SetMapdata(sf::RenderWindow &window) {
 
     screen.display();
     screen_image = screen.getTexture();
-    //sprite = sf::Sprite(screen_image);
     sprite.setTexture(screen_image);
     window.draw(sprite);
 }
@@ -54,7 +56,6 @@ void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
 
         screen.display();
         screen_image = screen.getTexture();
-        //sprite = sf::Sprite(screen_image);
         sprite.setTexture(screen_image);
         window.draw(sprite);
     }
@@ -76,5 +77,26 @@ void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
                 mapdata[x][y] = 0;
             }
         }
+    }
+}
+
+std::vector<int> GameMap::CheckCollision(int x, int y) const {
+    std::vector<int> position;
+
+    if (mapdata[x][y] == 0) {
+        position.push_back(0);
+        return position;
+    }
+    else {
+        position.push_back(1);
+
+        int posy = y;
+        while(mapdata[x][posy]) {
+            posy++;
+            if (posy > MAX_MAP_POSY) break;
+        }
+        position.push_back(posy);
+
+        return position;
     }
 }

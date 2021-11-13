@@ -21,7 +21,7 @@ GamePlayer p;
 m.LoadBackgorund(window);
 m.SetMapdata(window);
 p.LoadCharacter();
-p.SetPlayerPosition(800, 400);
+p.SetPlayerPosition(800, 200);
 
     while (window.isOpen())
     {
@@ -54,20 +54,32 @@ else {
 
         
         
-if (event.type == sf::Event::KeyPressed && flag == 0) {
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
     window.clear();
-    //m.LoadBackgorund(window);
     m.LoadMapdata(window, 0);
-    p.test();
-    flag++;
+    p.MoveRight();
 }
-if (event.type == sf::Event::KeyReleased && flag == 1) {
-    flag--;
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    window.clear();
+    m.LoadMapdata(window, 0);
+    p.MoveLeft();
+}
+if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    window.clear();
+    m.LoadMapdata(window, 0);
+    p.MoveJump();
+}
+
+std::vector<int> position = p.GetPlayerPosition();
+position = m.CheckCollision(position.at(0) + 10, position.at(1) + 30);
+if (position.at(0) == 0) {
+    window.clear();
+    m.LoadMapdata(window, 0);
+    p.Gravity();
 }
 
 if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
     window.clear();
-    //m.LoadBackgorund(window);
     m.DestroyMap(window, event.mouseButton.x, event.mouseButton.y);
     m.LoadMapdata(window, 1);
     flag++;
