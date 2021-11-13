@@ -18,4 +18,14 @@ class Bar{
         float max_val, cur_val, pos_x, pos_y, bar_width, bar_height;
 };
 
+class Arrow{
+    public:
+        void set_arrow(float pos_x_, float pos_y_, float angle_);
+        void rotate_arrow(float angle_);
+        void draw_arrow(sf::RenderWindow &window, const sf::Color color);
+
+    private:
+        float pos_x, pos_y, angle;
+};
+
 #endif

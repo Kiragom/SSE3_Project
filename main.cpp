@@ -10,6 +10,7 @@ int main()
     //sf::CircleShape shape(100.f);
     Key_control key_con;
     Missile missile1;
+    Arrow arrow1;
     //shape.setFillColor(sf::Color::Green);
     sf::Texture texture1;
     Bar hp_bar;
@@ -29,12 +30,20 @@ int main()
                 window.close();
 
             if (event.type == sf::Event::KeyPressed){
-                hp_bar.set_max_val(1000);
+                /*hp_bar.set_max_val(1000);
                 hp_bar.set_cur_val(300);
-                hp_bar.set_pos(0, 400);
+                hp_bar.set_pos(800, 400);
                 hp_bar.set_size(30, 15);
-                hp_bar.draw_bar(window, sf::Color::White, sf::Color::Red);
+                hp_bar.draw_bar(window, sf::Color::White, sf::Color::Red);*/
 
+                if(flag == 0) arrow1.set_arrow(800, 400, 0);
+                flag = 1;
+                window.clear();
+                window.draw(background);
+                //arrow1.draw_arrow(window, sf::Color::White);
+                //arrow1.rotate_arrow(10);
+                //window.clear();
+                
                 //missile1.set_missile(window, 0, 400, Arc);
                 //missile1.launch_missile(background, window, 100, 45);
 
@@ -46,9 +55,13 @@ int main()
                         printf("pressed_up_left\n");
                         break;
                     case Pressed_up:
+                        arrow1.rotate_arrow(5);
+                        arrow1.draw_arrow(window, sf::Color::White);
                         printf("pressed_up\n");
                         break;
                     case Pressed_right:
+                    arrow1.rotate_arrow(-5);
+                        arrow1.draw_arrow(window, sf::Color::White);
                         printf("pressed_right\n");
                         break;
                     case Pressed_left:
