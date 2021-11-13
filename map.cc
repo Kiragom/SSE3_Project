@@ -13,8 +13,9 @@ void GameMap::LoadBackgorund(sf::RenderWindow &window) {
 void GameMap::SetMapdata(sf::RenderWindow &window) {
     for (int x = 0;x <= 1600;x++) {
         for (int y = 0;y <= 800;y++) {
-            if (y < 400) mapdata[x][y] = 0;
+            if (y < 400 || x < 400 || x > 1200) mapdata[x][y] = 0;
             else mapdata[x][y] = 1;
+            if (y >= 400 && ((6*x + y > 2800)) && x < 400) mapdata[x][y] = 1;
         }
     }
 
@@ -99,4 +100,15 @@ std::vector<int> GameMap::CheckCollision(int x, int y) const {
 
         return position;
     }
+}
+
+int GameMap::CheckGradient(int x, int y, int direction) const {
+    int cnt = 0;
+    while(cnt < 3) {
+        if (mapdata[x][y] == 0) return y;
+        cnt++;
+        y--;
+    }
+
+    return -1;
 }

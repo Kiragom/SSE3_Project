@@ -11,16 +11,17 @@ void GamePlayer::LoadCharacter() {
 
 }
 
-void GamePlayer::SetPlayerPosition(int x, int y) {
+void GamePlayer::SetPlayerPosition(int x, int y, int dir) {
     posx = x;
     posy = y;
-    direction = 1;
+    direction = dir;
 } 
 
 std::vector<int> GamePlayer::GetPlayerPosition() {
     std::vector<int> position;
     position.push_back(posx);
     position.push_back(posy);
+    position.push_back(direction);
 
     return position;
 }
@@ -31,14 +32,16 @@ void GamePlayer::DrawPlayerPosition(sf::RenderWindow &window) {
 }
 
 void GamePlayer::MoveRight() {
-    posx += 5;
+    posx += 1;
     if (posx > MAX_MAP_POSX - 20) posx = MAX_MAP_POSX - 20;
+    if (direction == -1) character_alive.setScale(-0.1, 0.1);
     direction = 1;
 }
 
 void GamePlayer::MoveLeft() {
-    posx -= 5;
+    posx -= 1;
     if (posx < 0) posx = 0;
+    if (direction == 1) character_alive.setScale(0.1, 0.1);
     direction = -1;
 }
 
@@ -48,5 +51,5 @@ void GamePlayer::MoveJump() {
 }
 
 int GamePlayer::Gravity() {
-    posy += 2;
+    posy += 1;
 }

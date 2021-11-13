@@ -17,7 +17,7 @@ class GamePlayer {
 
     public:
     void LoadCharacter();
-    void SetPlayerPosition(int x, int y);
+    void SetPlayerPosition(int x, int y, int dir);
     std::vector<int> GetPlayerPosition();
     void MoveRight();
     void MoveLeft();
