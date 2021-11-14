@@ -1,4 +1,7 @@
 #include <SFML/Graphics.hpp>
+#include "key_control.h"
+#include "missile.h"
+#include "indicator.h"
 #include <iostream>
 
 #include "map.h"
@@ -7,14 +10,8 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-//sf::Texture texture1;
-//texture1.loadFromFile("electricity.jpg");
-//sf::Sprite background(texture1);
 int flag = 0, other = 0;
 int c = 0;
-//window.draw(background);
 
 GameMap m;
 GamePlayer p;
@@ -23,6 +20,11 @@ m.SetMapdata(window);
 p.LoadCharacter();
 p.SetPlayerPosition(800, 200, 1);
 
+    Key_control key_con;
+    Missile missile1;
+    Arrow arrow1;
+    Bar hp_bar;
+    
     while (window.isOpen())
     {
         sf::Event event;
@@ -30,6 +32,57 @@ p.SetPlayerPosition(800, 200, 1);
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            if (event.type == sf::Event::KeyPressed){
+                /*hp_bar.set_max_val(1000);
+                hp_bar.set_cur_val(300);
+                hp_bar.set_pos(800, 400);
+                hp_bar.set_size(30, 15);
+                hp_bar.draw_bar(window, sf::Color::White, sf::Color::Red);*/
+
+                if(flag == 0) arrow1.set_arrow(800, 400, 0);
+                flag = 1;
+                //arrow1.draw_arrow(window, sf::Color::White);
+                //arrow1.rotate_arrow(10);
+                //window.clear();
+                
+                //missile1.set_missile(window, 0, 400, Arc);
+                //missile1.launch_missile(background, window, 100, 45);
+
+                switch(key_con.get_cur_state()){
+                    case Pressed_up_right:
+                        printf("pressed_up_right\n");
+                        break;
+                    case Pressed_up_left:
+                        printf("pressed_up_left\n");
+                        break;
+                    case Pressed_up:
+                        arrow1.rotate_arrow(5);
+                        arrow1.draw_arrow(window, sf::Color::White);
+                        printf("pressed_up\n");
+                        break;
+                    case Pressed_right:
+                    arrow1.rotate_arrow(-5);
+                        arrow1.draw_arrow(window, sf::Color::White);
+                        printf("pressed_right\n");
+                        break;
+                    case Pressed_left:
+                        printf("pressed_left\n");
+                        break;
+                    case Pressed_esc:
+                        printf("pressed_esc\n");
+                        break;
+                    case Pressed_a:
+                        printf("pressed_a\n");
+                        break;
+                    case Pressed_s:
+                        printf("pressed_s\n");
+                        break;
+                    case Pressed_space:
+                        printf("pressed_space\n");
+                        break;
+                }
+            }
         }
 /*if (flag == 0) {
     flag = 1;
