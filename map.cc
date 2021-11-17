@@ -2,10 +2,9 @@
 
 void GameMap::LoadBackgorund(sf::RenderWindow &window) {
     background_image.loadFromFile(BACKGROUND_FILE);
-    //background = sf::Sprite(background_image);
     background.setTexture(background_image);
 
-    screen.create(1600,800);
+    screen.create(1600, 800);
     screen.clear();
     screen.draw(background);
 }
@@ -20,15 +19,12 @@ void GameMap::SetMapdata(sf::RenderWindow &window) {
     }
 
     sf::Vertex vertex;
-    sf::Sprite a;
-    //a.
-    //test_image.loadFromFile("test.jpg");
     for (int x = 0;x <= 1600;x++) {
         for (int y = 0;y <= 800;y++) {
             if (mapdata[x][y]) {
                 vertex.position = sf::Vector2f(x, y);
                 vertex.color = sf::Color::Green;
-                screen.draw(&vertex, 1, sf::Points);
+                screen.draw(&vertex, 1, sf::Points, sf::BlendNone);
             }
         }
     }
@@ -41,11 +37,11 @@ void GameMap::SetMapdata(sf::RenderWindow &window) {
 
 void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
     if (DELETE) {
-        screen.clear();
-        screen.draw(background);
+        //screen.clear();
+        //screen.draw(background);
 
         sf::Vertex vertex;
-        for (int x = 0;x <= 1600;x++) {
+        /*for (int x = 0;x <= 1600;x++) {
             for (int y = 0;y <= 800;y++) {
                 if (mapdata[x][y]) {
                     vertex.position = sf::Vector2f(x, y);
@@ -53,7 +49,12 @@ void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
                     screen.draw(&vertex, 1, sf::Points);
                 }
             }
-        }
+        }*/
+
+        /*sf::CircleShape c(20);
+        c.setFillColor(sf::Color::Transparent);
+        c.setPosition(800, 600);
+        screen.draw(c, sf::BlendNone);*/
 
         screen.display();
         screen_image = screen.getTexture();
@@ -61,7 +62,10 @@ void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
         window.draw(sprite);
     }
 
-    else window.draw(sprite);
+    else {
+        window.draw(background);
+        window.draw(sprite);
+    }
 }
 
 void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
@@ -79,6 +83,11 @@ void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
             }
         }
     }
+
+    sf::CircleShape c(40);
+        c.setFillColor(sf::Color::Transparent);
+        c.setPosition(posx-40, posy-40);
+        screen.draw(c, sf::BlendNone);
 }
 
 std::vector<int> GameMap::CheckCollision(int x, int y) const {

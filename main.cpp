@@ -20,7 +20,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
     int flag = 0, other = 0, state = WAIT;
     int c = 0;
-    const sf::Time show_time = sf::seconds(0.1f);
+    const sf::Time show_time = sf::seconds(0.05f);
     GameMap m;
     GamePlayer p;
     m.LoadBackgorund(window);
@@ -84,7 +84,7 @@ int main()
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             vector <int> player_pos = p.GetPlayerPosition();
-            printf("player_pos!\n");
+            //printf("player_pos!\n");
             if(state == WAIT){
                  missile1.set_missile(player_pos[0], player_pos[1], 50, 45, Arc);
                  state = FIRE;
@@ -110,7 +110,7 @@ int main()
 
         if(state == FIRE){
             missile1.update_missile();
-            printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
+            //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
             position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
             if (position.at(0) == 1) {
                 state = WAIT;
