@@ -11,8 +11,6 @@ class GameMap {
     sf::Sprite sprite;
     char mapdata[MAX_MAP_POSX][MAX_MAP_POSY];
 
-    sf::Texture test_image;
-
     public:
     void LoadBackgorund(sf::RenderWindow &window);
     void SetMapdata(sf::RenderWindow &window);
