@@ -11,8 +11,6 @@ enum pressed_key{
     Pressed_a,
     Pressed_s,
     Pressed_space,
-    Pressed_up_right,
-    Pressed_up_left
 };
 
 class Key_control{

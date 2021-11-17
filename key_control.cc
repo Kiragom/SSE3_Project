@@ -53,13 +53,7 @@ bool Key_control::check_space_key(){
 int Key_control::get_cur_state(){
     state = Default;
 
-    if(check_up_key() && check_right_key()){
-        state = Pressed_up_right;
-    }
-    else if(check_up_key() && check_left_key()){
-        state = Pressed_up_left;
-    }
-    else if(check_up_key()){
+    if(check_up_key()){
         state = Pressed_up;
     }
     else if(check_right_key()){

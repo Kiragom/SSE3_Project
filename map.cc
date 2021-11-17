@@ -93,8 +93,8 @@ std::vector<int> GameMap::CheckCollision(int x, int y) const {
 
         int posy = y;
         while(mapdata[x][posy]) {
-            posy++;
-            if (posy > MAX_MAP_POSY) break;
+            posy--;
+            if (posy <= 0) break;
         }
         position.push_back(posy);
 

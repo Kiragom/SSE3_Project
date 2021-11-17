@@ -6,12 +6,21 @@
 #define PI 3.1415926535
 #define GRAVITY 74
 
-void Missile::update_pos(float delta_x, float delta_y){
-    pos_x = pos_x + delta_x;
-    pos_y = pos_y - delta_y;
+void Missile::update_missile(void){
+    pos_x = pos_x + cur_x_v;
+    pos_y = pos_y - cur_y_v;
+    cur_y_v -= GRAVITY * 0.1;
 }
 
-void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, float power_, float angle_){
+int Missile::get_pos_x(void){
+    return (int)round(pos_x);
+}
+
+int Missile::get_pos_y(void){
+    return (int)round(pos_y);
+}
+
+/*void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, float power_, float angle_){
     sf::Clock clock;
     sf::Clock timer;
 
@@ -19,7 +28,7 @@ void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, fl
     float interval = 0, limit = 4, check_point = 0;
     const sf::Time show_time = sf::seconds(0.1f);
 
-    power = power_; angle = angle_;
+    
     cur_x_v = MAX_DIST * (power / 100) * cos((angle_ * PI) / 180);
     cur_y_v = MAX_DIST * (power / 100) * sin((angle_ * PI) / 180);
     while(1){
@@ -56,17 +65,20 @@ void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, fl
     }
 
     state = Explosion;
-}
+}*/
 
-void Missile::set_missile(sf::RenderWindow &window, float pos_x_, float pos_y_, int fire_mode_){
-    sf::CircleShape shape(5.0f);
-    shape.setFillColor(sf::Color::White);
+void Missile::set_missile(float pos_x_, float pos_y_, float power_, float angle_, int fire_mode_){
+    //sf::CircleShape shape(5.0f);
+    //shape.setFillColor(sf::Color::White);
     state = Ready;
     pos_x = pos_x_; pos_y = pos_y_;
     fire_mode = fire_mode_;
+    power = power_; angle = angle_;
 
-    shape.setPosition(sf::Vector2f(pos_x, pos_y));
-    window.draw(shape);
+    cur_x_v = MAX_DIST * (power / 100) * cos((angle_ * PI) / 180);
+    cur_y_v = MAX_DIST * (power / 100) * sin((angle_ * PI) / 180);
+    //shape.setPosition(sf::Vector2f(pos_x, pos_y));
+    //window.draw(shape);
 }
 
 void Missile::draw_missile(sf::RenderWindow &window){
