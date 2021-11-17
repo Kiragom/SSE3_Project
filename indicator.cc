@@ -42,7 +42,6 @@ void Bar::draw_bar(sf::RenderWindow &window, const sf::Color back_color, const s
 
     window.draw(max_bar);
     window.draw(cur_bar);
-    window.display();
 }
 
 void Bar::set_pos(float pos_x_, float pos_y_){

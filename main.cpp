@@ -27,12 +27,16 @@ int main()
     m.SetMapdata(window);
     p.LoadCharacter();
     p.SetPlayerPosition(800, 200, 1);
-
+    Bar hp_bar1;
     Key_control key_con;
     Missile missile1;
     Arrow arrow1;
     Bar hp_bar;
     
+    hp_bar1.set_size(30, 15);
+    hp_bar1.set_cur_val(60);
+    hp_bar1.set_max_val(100);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -113,7 +117,7 @@ int main()
                 m.DestroyMap(window, missile1.get_pos_x(), position.at(1));
                 m.LoadMapdata(window, 1);
             }
-            sf::sleep(show_time);
+            //sf::sleep(show_time);
         }
 
         position = p.GetPlayerPosition();
@@ -127,6 +131,9 @@ int main()
 
         window.clear();
         m.LoadMapdata(window, 0);
+        
+        hp_bar1.set_pos(position.at(0), position.at(1) - 20);
+        hp_bar1.draw_bar(window, sf::Color::White, sf::Color::Red);
 
         if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
             window.clear();
