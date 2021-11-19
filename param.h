@@ -14,3 +14,9 @@
 
 #define TIME_LIMIT  10000000
 #define MAX_STAMINA 1000
+
+enum _GAMESTATE {
+    START,
+    PLAYING,
+    END
+};

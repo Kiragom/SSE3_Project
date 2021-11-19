@@ -35,9 +35,21 @@ void Game::StartGame() {
 
     map.LoadBackgorund(window);
     map.SetMapdata(window);
+
+    power_bar.set_size(100, 15);
+    power_bar.set_cur_val(0);
+    power_bar.set_max_val(100);
+
+    stamina_bar.set_size(30, 5);
+    stamina_bar.set_cur_val(MAX_STAMINA);
+    stamina_bar.set_max_val(MAX_STAMINA);
 }
 
 bool Game::IsOpen() {
     if (window.isOpen()) return true;
     else return false;
+}
+
+void Game::GameLoop() {
+    if ()
 }

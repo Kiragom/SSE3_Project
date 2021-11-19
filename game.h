@@ -19,8 +19,13 @@ class Game {
     int team_id;
     int Nworm;
     int worm_id;
-    class GameMap map;
+    GameMap map;
     std::vector<class GamePlayer *> worms;
+    Bar power_bar;
+    Bar stamina_bar;
+    Missile missile;
+    Arrow angle_arrow;
+    enum _GAMESTATE GAMESTATE;
 
     public:
     Game(int _xlength, int _ylength);
