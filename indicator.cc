@@ -85,5 +85,4 @@ void Arrow::draw_arrow(sf::RenderWindow &window, const sf::Color color){
     bar2.setFillColor(sf::Color::Black);*/
 
     window.draw(bar);
-    window.display();
 }

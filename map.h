@@ -18,6 +18,7 @@ class GameMap {
     void LoadMapdata(sf::RenderWindow &window, int aaaa);
     void DestroyMap(sf::RenderWindow &window, int x, int y);
     bool CheckCollision(int& x, int& y, int& xdelta, int& ydelta);
+    bool CheckCollisionP(int& x, int& y, int &xdelta, int &ydelta);
     void CheckGradient(int &x, int &y, int& xdelta, int& ydelta);
 
     friend class GamePlayer;

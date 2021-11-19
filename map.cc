@@ -95,6 +95,58 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
             else startx += unitx;
         }
 
+        for (int x = startx-5;x < startx+5;x++) {
+            for (int y = starty-5;y < starty+5;y++) {
+                if (mapdata[x][y]) {
+                    collision = true;
+                    break;
+                }
+            }
+        }
+        if (collision) break;
+    }
+
+    xdelta = startx - x;
+    ydelta = starty - y;
+
+    return collision;
+
+    /*if (mapdata[x][y] == 0) {
+        position.push_back(0);
+        return position;
+    }
+    else {
+        position.push_back(1);
+
+        int posy = y;
+        while(mapdata[x][posy]) {
+            posy--;
+            if (posy <= 0) break;
+        }
+        position.push_back(posy);
+
+        return position;
+    }*/
+}
+
+bool GameMap::CheckCollisionP(int& x, int& y, int &xdelta, int &ydelta) {
+    bool collision = false;
+    int startx = x, starty = y;
+    int endx = x + xdelta, endy = y + ydelta;
+    int unitx = (xdelta < 0) ? -1 : 1;
+    int unity = (ydelta < 0) ? -1 : 1;
+    float lean, gradient;
+    if (startx != endx && starty != endy) lean = (float)(endy - starty) / (float)(endx - startx);
+
+    while(startx != endx || starty != endy) {
+        if (startx == endx && starty != endy) starty += unity;
+        else if (startx != endx && starty == endy) startx += unitx;
+        else {
+            float gradient = (float)(endy - starty) / (float)(endx - startx);
+            if (gradient <= lean) starty += unity;
+            else startx += unitx;
+        }
+
         if (mapdata[startx][starty]) {
             collision = true;
             break;

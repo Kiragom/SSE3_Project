@@ -20,13 +20,18 @@ int Missile::get_pos_y(void){
     return (int)round(pos_y);
 }
 
-/*void Missile::launch_missile(sf::Sprite background, sf::RenderWindow &window, float power_, float angle_){
+void Missile::get_delta(int& delta_x, int& delta_y){
+    delta_x = (int)round(cur_x_v);
+    delta_y = (int)round(cur_y_v);
+    delta_y *= -1;
+}
+
+/*void Missile::launch_missile(sf::RenderWindow &window, float power_, float angle_){
     sf::Clock clock;
     sf::Clock timer;
 
-    state = Flight;
     float interval = 0, limit = 4, check_point = 0;
-    const sf::Time show_time = sf::seconds(0.1f);
+    const sf::Time show_time = sf::seconds(0.05f);
 
     
     cur_x_v = MAX_DIST * (power / 100) * cos((angle_ * PI) / 180);
@@ -53,9 +58,6 @@ int Missile::get_pos_y(void){
                     cur_y_v = -cur_y_v;
                 }
             }
-            //window.clear();
-            //window.draw(background);
-            update_pos(cur_x_v, cur_y_v);
             draw_missile(window);
             window.display();
             check_point = interval;
@@ -63,14 +65,11 @@ int Missile::get_pos_y(void){
 
         if(interval > limit) break;
     }
-
-    state = Explosion;
 }*/
 
 void Missile::set_missile(float pos_x_, float pos_y_, float power_, float angle_, int fire_mode_){
     //sf::CircleShape shape(5.0f);
     //shape.setFillColor(sf::Color::White);
-    state = Ready;
     pos_x = pos_x_; pos_y = pos_y_;
     fire_mode = fire_mode_;
     power = power_; angle = angle_;
