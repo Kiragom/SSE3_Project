@@ -26,7 +26,7 @@ int main()
     m.LoadBackgorund(window);
     m.SetMapdata(window);
     p.LoadCharacter();
-    p.SetPlayerPosition(800, 200, 1);
+    p.SetPlayerPosition(800, 200, -1);
     Bar hp_bar1;
     Key_control key_con;
     Missile missile1;
@@ -36,6 +36,9 @@ int main()
     hp_bar1.set_size(30, 15);
     hp_bar1.set_cur_val(60);
     hp_bar1.set_max_val(100);
+
+    int x, y, dir, xdelta, ydelta;
+    std::vector<int> position;
 
     while (window.isOpen())
     {
@@ -83,32 +86,37 @@ int main()
             p.MoveJump();
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            vector <int> player_pos = p.GetPlayerPosition();
+            p.GetPlayerPosition(x, y, dir);
             //printf("player_pos!\n");
             if(state == WAIT){
-                 missile1.set_missile(player_pos[0], player_pos[1], 50, 45, Arc);
+                 missile1.set_missile(x, y, 50, 45, Arc);
                  state = FIRE;
             }
         }
+            //p.Gravity();
+            p.GetPlayerPosition(x, y, dir);
+            p.GetPlayerMovement(xdelta, ydelta);
+            m.CheckCollisionPlayer(x, y, xdelta, ydelta);
+            p.SetPlayerMovement(xdelta, ydelta);
 
-        std::vector<int> position = p.GetPlayerPosition();
+        /*p.GetPlayerPosition(x, y, dir);
         if (other == 1) {
-            int change = m.CheckGradient(position.at(0) + 10, position.at(1) + 30, position.at(2));
+            int change = m.CheckGradient(x + 10, y + 30, dir);
             if (change == -1) {
-                if (position.at(2) == 1) p.SetPlayerPosition(position.at(0) - 1, position.at(1), position.at(2));
-                else p.SetPlayerPosition(position.at(0) + 1, position.at(1), position.at(2));
+                if (dir == 1) p.SetPlayerPosition(x - 1, y, dir);
+                else p.SetPlayerPosition(x + 1, y, dir);
             }
-            else p.SetPlayerPosition(position.at(0), change - 29, position.at(2));
+            else p.SetPlayerPosition(x, change - 29, dir);
         }
 
-        position = m.CheckCollision(position.at(0) + 10, position.at(1) + 30);
-        if (position.at(0) == 0) {
+        position = m.CheckCollision(x + 10, y + 30);
+        if (x == 0) {
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.Gravity();
-        }
+        }*/
 
-        if(state == FIRE){
+        /*if(state == FIRE){
             missile1.update_missile();
             //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
             position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
@@ -118,21 +126,21 @@ int main()
                 m.LoadMapdata(window, 1);
             }
             //sf::sleep(show_time);
-        }
+        }*/
 
-        position = p.GetPlayerPosition();
-        int change = m.CheckGradient(position.at(0) + 10, position.at(1) + 30, position.at(2));
+        /*p.GetPlayerPosition(x, y, dir);
+        int change = m.CheckGradient(x + 10, y + 30, dir);
         if (change == -1) {
-            if (position.at(2) == 1) p.SetPlayerPosition(position.at(0) - 1, position.at(1), position.at(2));
-            else p.SetPlayerPosition(position.at(0) + 1, position.at(1), position.at(2));
+            if (dir == 1) p.SetPlayerPosition(x - 1, y, dir);
+            else p.SetPlayerPosition(x + 1, y, dir);
         }
-        else p.SetPlayerPosition(position.at(0), change - 29, position.at(2));
+        else p.SetPlayerPosition(x, change - 29, dir);*/
 
 
         window.clear();
         m.LoadMapdata(window, 0);
         
-        hp_bar1.set_pos(position.at(0), position.at(1) - 20);
+        hp_bar1.set_pos(x, y - 20);
         hp_bar1.draw_bar(window, sf::Color::White, sf::Color::Red);
 
         if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
@@ -146,6 +154,14 @@ int main()
         }
 
         if(state == FIRE) missile1.draw_missile(window);
+        p.PlayerMove();
+
+            p.Gravity();
+            p.GetPlayerPosition(x, y, dir);
+            p.GetPlayerMovement(xdelta, ydelta);
+            m.CheckCollisionPlayer(x, y, xdelta, ydelta);
+            p.SetPlayerMovement(xdelta, ydelta);
+
         p.DrawPlayerPosition(window);
         window.display();
         //sf::sleep(show_time);

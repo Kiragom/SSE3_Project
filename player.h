@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include "param.h"
 
 class GamePlayer {
@@ -10,6 +9,8 @@ class GamePlayer {
     sf::Sprite character_death;
     int posx;
     int posy;
+    int movex;
+    int movey;
     int team;
     int death;
     int turn;
@@ -18,7 +19,10 @@ class GamePlayer {
     public:
     void LoadCharacter();
     void SetPlayerPosition(int x, int y, int dir);
-    std::vector<int> GetPlayerPosition();
+    void GetPlayerPosition(int& x, int& y, int& dir);
+    void SetPlayerMovement(int xdelta, int ydelta);
+    void GetPlayerMovement(int& xdelta, int& ydelta);
+    void PlayerMove();
     void MoveRight();
     void MoveLeft();
     void MoveJump();

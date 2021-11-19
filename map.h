@@ -4,6 +4,7 @@
 
 class GameMap {
     private:
+    sf::Image map_image;
     sf::Texture background_image;
     sf::RenderTexture screen;
     sf::Sprite background;
@@ -16,7 +17,7 @@ class GameMap {
     void SetMapdata(sf::RenderWindow &window);
     void LoadMapdata(sf::RenderWindow &window, int aaaa);
     void DestroyMap(sf::RenderWindow &window, int x, int y);
-    std::vector<int> CheckCollision(int x, int y) const;
+    void CheckCollisionPlayer(int& x, int& y, int& xdelta, int& ydelta);
     int CheckGradient(int x, int y, int direction) const;
 
     friend class GamePlayer;
