@@ -24,6 +24,7 @@ class Game {
 
     public:
     Game(int _xlength, int _ylength);
+    bool IsOpen();
     void StartGame();
     void GameLoop();
     void EndGame();

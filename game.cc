@@ -24,8 +24,20 @@ void Game::StartGame() {
     std::uniform_int_distribution<int> create_position(350, 1250);
     for (int i = 0;i < Nworm;i++) {
         for (int j = 0;j < Nteam;j++) {
-            class GamePlayer *worm = new 
+            GamePlayer *worm = new GamePlayer;
+            worm->SetTeamId(team_id_shuffle[j], worm_id_shuffle[i]);
+            worm->SetPlayerPosition(create_position(g), 50, -1);
+            worm->SetPlayerMovement(0, 0);
+
+            worms.push_back(worm);
         }
     }
-    
+
+    map.LoadBackgorund(window);
+    map.SetMapdata(window);
+}
+
+bool Game::IsOpen() {
+    if (window.isOpen()) return true;
+    else return false;
 }
