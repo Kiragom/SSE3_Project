@@ -15,7 +15,9 @@ enum cur_state{
     MOVE,
     WAIT_POWER,
     WAIT_ANGLE,
-    STOP
+    STOP,
+    JUMP,
+    FALL
 };
 
 enum dir{
@@ -26,7 +28,7 @@ enum dir{
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
-    int flag = 0, other = 0, state = MOVE;
+    int flag = 0, other = 0, state = MOVE, jump_cnt = 0;
     int c = 0, player_dir = LEFT, prev_x, prev_y;
     float power_delta = 1.5, angle_delta = 1.5, power = 0, angle = 0;
     const sf::Time show_time = sf::seconds(0.05f);
@@ -67,6 +69,7 @@ int main()
             if (event.type == sf::Event::KeyPressed){
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                     p.GetPlayerPosition(x, y, dir);
+                    //printf("%d\n", y);
                     if(state == WAIT_ANGLE){
                         if(dir==-1)
                             missile1.set_missile(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
@@ -114,16 +117,34 @@ int main()
             p.SetPlayerPosition(x, y, dir);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && state == MOVE) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && (state == MOVE || state == JUMP || state == FALL)) {
+            //window.clear();
+            //m.LoadMapdata(window, 0);
             p.MoveRight();
             other = 1;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && state == MOVE) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && (state == MOVE || state == JUMP || state == FALL)) {
+            //window.clear();
+            //m.LoadMapdata(window, 0);
             p.MoveLeft();
             other = 1;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && state == MOVE) {
+            //window.clear();
+            //m.LoadMapdata(window, 0);
             p.MoveJump();
+            jump_cnt = 0;
+            state = JUMP;
+        }
+
+        if(state == JUMP){
+            if(jump_cnt <= MAX_JUMP_CNT){
+                jump_cnt++;
+                p.MoveJump();
+            }
+            else {
+                state = FALL;
+            }
         }
 
         p.GetPlayerPosition(x, y, dir);
@@ -137,15 +158,22 @@ int main()
             stamina_bar1.dec_val(1);
             printf("stamina : %lf\n", stamina_bar1.get_cur_val());
         }
+        /*if(state == FIRE){
+            missile1.update_missile();
+            position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
+            if (position.at(0) == 1) {
+                state = WAIT;
+                m.DestroyMap(window, missile1.get_pos_x(), position.at(1));*/
 
             
         if(state == FIRE){
+            //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
             x = missile1.get_pos_x();
             y = missile1.get_pos_y();
             int delta_x, delta_y;
             missile1.get_delta(delta_x, delta_y);
 
-            if (m.CheckCollision(x, y, delta_x, delta_y)) {
+            if (m.CheckCollision(x, y, delta_x, delta_y) || ((x < 0 || x >= MAX_MAP_POSX) && (y <0 || y >= MAX_MAP_POSY))) {
                 state = MOVE;
                 m.DestroyMap(window, x + delta_x, y + delta_y);
                 m.LoadMapdata(window, 1);
@@ -155,6 +183,7 @@ int main()
             }
             unsigned int cnt = 0;
             while(cnt != TIME_LIMIT) cnt++;
+            //sf::sleep(show_time);
         }
 
         if(state == WAIT_POWER){
@@ -239,23 +268,13 @@ int main()
         p.Gravity();
         p.GetPlayerPosition(x, y, dir);
         p.GetPlayerMovement(xdelta, ydelta);
-        if (m.CheckCollisionGravity(x, y, xdelta, ydelta)) p.SetPlayerMovement(xdelta, ydelta - 1);
+        if (m.CheckCollisionP(x, y, xdelta, ydelta)) {
+            p.SetPlayerMovement(xdelta, ydelta - 1);
+            if(state == FALL) state = MOVE;
+        }
         p.PlayerMove();
         p.DrawPlayerPosition(window);
         window.display();
-    }
-
-    return 0;
-}
-
-#include "game.h"
-
-int main() {
-    Game WORMS();
-    WORMS.StartGame();
-WORMS.Display();
-    while(WORMS.IsOpen()) {
-        //WORMS.GameLoop();
     }
 
     return 0;
