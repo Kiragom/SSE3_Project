@@ -125,12 +125,43 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
 }
 
 void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
-    int cnt = 0;
+    if (ydelta == 0) return;
+    if (xdelta == 0) return;
+
+    int startx = x, starty = y;
+    int endx = x + xdelta;
+    int unitx = (xdelta < 0) ? -1 : 1;
+    int cnt, check;
+
+    while(startx != endx) {
+        startx += unitx;
+        cnt = 0;
+        check = -1;
+
+        while(cnt < 2) {
+            if (mapdata[startx][starty + cnt] == 0) {
+                check = cnt;
+                break;
+            }
+            cnt++;
+        }
+
+        if (check == -1) {
+            startx -= unitx;
+            break;
+        }
+        else starty += cnt;
+    }
+
+    xdelta = startx - x;
+    ydelta = starty - y;
+
+
+
+    /*int cnt = 0;
     while(cnt < 3) {
         if (mapdata[x][y] == 0) return y;
         cnt++;
         y--;
-    }
-
-    return -1;
+    }*/
 }
