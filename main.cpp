@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+/*#include <SFML/Graphics.hpp>
 #include "key_control.h"
 #include "missile.h"
 #include "indicator.h"
@@ -246,16 +246,18 @@ int main()
     }
 
     return 0;
-}
+}*/
 
 #include "game.h"
+#include <iostream>
+#include <SFML/Graphics.hpp>
 
 int main() {
-    Game WORMS();
+    Game WORMS(1600, 800);
     WORMS.StartGame();
-WORMS.Display();
+
     while(WORMS.IsOpen()) {
-        //WORMS.GameLoop();
+        WORMS.GameLoop();
     }
 
     return 0;
