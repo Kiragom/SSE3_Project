@@ -21,7 +21,8 @@ int Missile::get_pos_y(void){
 }
 
 void Missile::get_delta(int& delta_x, int& delta_y){
-    
+    delta_x = (int)round(cur_x_v);
+    delta_y = (int)round(cur_y_v);
 }
 
 /*void Missile::launch_missile(sf::RenderWindow &window, float power_, float angle_){

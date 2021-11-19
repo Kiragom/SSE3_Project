@@ -85,10 +85,10 @@ int main()
                         power = 0;
                     }
                     else if(state == WAIT_POWER) {
-                        vector <int> player_pos = p.GetPlayerPosition();
+                        p.GetPlayerPosition(x, y, dir);
                         state = WAIT_ANGLE;
 
-                        if(player_pos[2] == -1) {
+                        if(dir == -1) {
                             player_dir = LEFT;
                             angle = 180;
                         }
@@ -122,48 +122,23 @@ int main()
         //p.Gravity();
         p.GetPlayerPosition(x, y, dir);
         p.GetPlayerMovement(xdelta, ydelta);
-        m.CheckCollisionPlayer(x, y, xdelta, ydelta);
+        m.CheckCollision(x, y, xdelta, ydelta);
         p.SetPlayerMovement(xdelta, ydelta);
 
-        /*p.GetPlayerPosition(x, y, dir);
-        if (other == 1) {
-            int change = m.CheckGradient(x + 10, y + 30, dir);
-            if (change == -1) {
-                if (dir == 1) p.SetPlayerPosition(x - 1, y, dir);
-                else p.SetPlayerPosition(x + 1, y, dir);
-            }
-            else p.SetPlayerPosition(x, change - 29, dir);
-        }
-
-        position = m.CheckCollision(x + 10, y + 30);
-        if (x == 0) {
-            //window.clear();
-            //m.LoadMapdata(window, 0);
-            p.Gravity();
-        }*/
-
-<<<<<<< HEAD
-        p.GetPlayerPosition(x, y, dir);
-        int change = m.CheckGradient(position.at(0) + 10, position.at(1) + 30, position.at(2));
-        if (change == -1) {
-            if (position.at(2) == 1) p.SetPlayerPosition(position.at(0) - 1, position.at(1), position.at(2));
-            else p.SetPlayerPosition(position.at(0) + 1, position.at(1), position.at(2));
-        }
-        else p.SetPlayerPosition(position.at(0), change - 29, position.at(2));
-
-        /*if(state == FIRE){
-            missile1.update_missile();
-            //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
-            m.CheckCollisionPlayer(missile1.get_pos_x(), missile1.get_pos_y());
-=======
         if(state == FIRE){
-            missile1.update_missile();
-            position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
->>>>>>> 498639bd07aaccf28ba578407b4699333bb2c73a
-            if (position.at(0) == 1) {
+            //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
+            x = missile1.get_pos_x();
+            y = missile1.get_pos_y();
+            int delta_x, delta_y;
+            missile1.get_delta(delta_x, delta_y);
+
+            if (m.CheckCollision(x, y, delta_x, delta_y)) {
                 state = MOVE;
-                m.DestroyMap(window, missile1.get_pos_x(), position.at(1));
+                m.DestroyMap(window, x + delta_x, y + delta_y);
                 m.LoadMapdata(window, 1);
+            }
+            else{
+                missile1.update_missile();
             }
             //sf::sleep(show_time);
         }
@@ -182,13 +157,6 @@ int main()
                 power_delta = -power_delta;
             }
         }
-        /*p.GetPlayerPosition(x, y, dir);
-        int change = m.CheckGradient(x + 10, y + 30, dir);
-        if (change == -1) {
-            if (dir == 1) p.SetPlayerPosition(x - 1, y, dir);
-            else p.SetPlayerPosition(x + 1, y, dir);
-        }
-        else p.SetPlayerPosition(x, change - 29, dir);*/
 
         if(state == WAIT_ANGLE){
             if(player_dir == LEFT){
@@ -214,13 +182,7 @@ int main()
                 }
             }
         }
-        p.PlayerMove();
 
-        p.Gravity();
-        p.GetPlayerPosition(x, y, dir);
-        p.GetPlayerMovement(xdelta, ydelta);
-        m.CheckCollisionPlayer(x, y, xdelta, ydelta);
-        p.SetPlayerMovement(xdelta, ydelta);
         
         window.clear();
         m.LoadMapdata(window, 0);
@@ -253,6 +215,14 @@ int main()
 
         if(state == FIRE) missile1.draw_missile(window);
 
+        p.PlayerMove();
+
+        p.Gravity();
+        p.GetPlayerPosition(x, y, dir);
+        p.GetPlayerMovement(xdelta, ydelta);
+        m.CheckCollision(x, y, xdelta, ydelta);
+        p.SetPlayerMovement(xdelta, ydelta);
+        
         p.DrawPlayerPosition(window);
         window.display();
         //sf::sleep(show_time);

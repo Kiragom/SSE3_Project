@@ -124,7 +124,7 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
     }*/
 }
 
-void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
+/*void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
     int cnt = 0;
     while(cnt < 3) {
         if (mapdata[x][y] == 0) return y;
@@ -133,4 +133,4 @@ void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
     }
 
     return -1;
-}
+}*/
