@@ -52,26 +52,26 @@ void GamePlayer::PlayerMove() {
 }
 
 void GamePlayer::MoveRight() {
-    movex += 2;
+    movex += 1;
     if (posx + movex > MAX_MAP_POSX - PLAYER_X_BOUND) movex = MAX_MAP_POSX - PLAYER_X_BOUND - posx;
     if (direction == -1) character_alive.setScale(-0.1, 0.1);
     direction = 1;
 }
 
 void GamePlayer::MoveLeft() {
-    movex -= 2;
+    movex -= 1;
     if (posx + movex < PLAYER_X_BOUND) movex = PLAYER_X_BOUND - posx;
     if (direction == 1) character_alive.setScale(0.1, 0.1);
     direction = -1;
 }
 
 void GamePlayer::MoveJump() {
-    movey -= 6;
+    movey -= 5;
     if (posy + movey < PLAYER_Y_BOUND) movey = PLAYER_Y_BOUND - posy;
 }
 
 int GamePlayer::Gravity() {
-    movey += 3;
+    movey += 2;
     if (posy + movey > MAX_MAP_POSY + PLAYER_Y_BOUND) {
         movey = 0;
         death = 1;
