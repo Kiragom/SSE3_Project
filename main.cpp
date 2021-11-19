@@ -1,4 +1,4 @@
-/*#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include "key_control.h"
 #include "missile.h"
 #include "indicator.h"
@@ -239,14 +239,14 @@ int main()
         p.Gravity();
         p.GetPlayerPosition(x, y, dir);
         p.GetPlayerMovement(xdelta, ydelta);
-        if (m.CheckCollisionP(x, y, xdelta, ydelta)) p.SetPlayerMovement(xdelta, ydelta - 1);
+        if (m.CheckCollisionGravity(x, y, xdelta, ydelta)) p.SetPlayerMovement(xdelta, ydelta - 1);
         p.PlayerMove();
         p.DrawPlayerPosition(window);
         window.display();
     }
 
     return 0;
-}*/
+}
 
 #include "game.h"
 
