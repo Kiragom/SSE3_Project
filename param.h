@@ -11,3 +11,5 @@
 #define PLAYER_BASE_DIR         23
 #define PLAYER_X_BOUND          15
 #define PLAYER_Y_BOUND          35
+
+#define TIME_LIMIT  10000000

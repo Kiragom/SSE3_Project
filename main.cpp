@@ -75,7 +75,10 @@ int main()
                     p.GetPlayerPosition(x, y, dir);
                     //printf("%d\n", y);
                     if(state == WAIT_ANGLE){
-                        missile1.set_missile(x, y - PLAYER_BASE_POSY, power, angle, Arc);
+                        if(dir==-1)
+                            missile1.set_missile(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
+                        else
+                            missile1.set_missile(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, Arc);
                         state = FIRE;
                     }
                 }
@@ -149,6 +152,8 @@ int main()
             else{
                 missile1.update_missile();
             }
+            unsigned int cnt = 0;
+            while(cnt != TIME_LIMIT) cnt++;
             //sf::sleep(show_time);
         }
 
@@ -197,18 +202,22 @@ int main()
         m.LoadMapdata(window, 0);
         p.GetPlayerPosition(x, y, dir);
         
-        hp_bar1.set_pos(x, y - 20);
-        
-        hp_bar1.set_pos(x, y - 20);
+        hp_bar1.set_pos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10);
         hp_bar1.draw_bar(window, sf::Color::White, sf::Color::Red);
 
         if(state == WAIT_POWER){
-            power_bar.set_pos(700, 450);
+            if(dir==-1)
+                power_bar.set_pos(x - PLAYER_BASE_POSX - 30, y - PLAYER_BASE_POSY + 40);
+            else
+                power_bar.set_pos(x - PLAYER_BASE_POSX - 35, y - PLAYER_BASE_POSY + 40);
             power_bar.draw_bar(window, sf::Color::White, sf::Color::Black);
         }
 
         if(state == WAIT_ANGLE){
-            fire_dir.set_arrow(x, y + 20, angle);
+            if(dir==-1)
+                fire_dir.set_arrow(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, angle);
+            else
+                fire_dir.set_arrow(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, angle);
             fire_dir.draw_arrow(window, sf::Color::White);
         }
 

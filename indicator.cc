@@ -69,7 +69,7 @@ void Arrow::draw_arrow(sf::RenderWindow &window, const sf::Color color){
 
     const float PI = 3.1415926535;
 
-    bar.setPosition(sf::Vector2f(pos_x + 50 * cos(((angle) * PI) / 180), pos_y - 50 * sin(((angle) * PI) / 180)));
+    bar.setPosition(sf::Vector2f(pos_x + 15 * cos(((angle) * PI) / 180), pos_y - 15 * sin(((angle) * PI) / 180)));
     bar.setRotation(-angle);
     bar.setSize(sf::Vector2f(80, 5));
     bar.setFillColor(color);
