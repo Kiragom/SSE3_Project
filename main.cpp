@@ -15,6 +15,7 @@ enum cur_state{
     MOVE,
     WAIT_POWER,
     WAIT_ANGLE,
+    STOP
 };
 
 enum dir{
@@ -26,7 +27,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
     int flag = 0, other = 0, state = MOVE;
-    int c = 0, player_dir = LEFT;
+    int c = 0, player_dir = LEFT, prev_x, prev_y;
     float power_delta = 1.5, angle_delta = 1.5, power = 0, angle = 0;
     const sf::Time show_time = sf::seconds(0.05f);
     GameMap m;
@@ -34,20 +35,24 @@ int main()
     m.LoadBackgorund(window);
     m.SetMapdata(window);
     p.LoadCharacter();
-    p.SetPlayerPosition(800, 200, -1);
-    Bar hp_bar1;
-    Bar power_bar;
+    p.SetPlayerPosition(800, 500, -1);
+    Bar hp_bar1, power_bar, stamina_bar1;
     Key_control key_con;
     Missile missile1;
     Arrow fire_dir;
     
     hp_bar1.set_size(30, 5);
-    hp_bar1.set_cur_val(60);
+    hp_bar1.set_cur_val(100);
     hp_bar1.set_max_val(100);
 
-    power_bar.set_size(100, 30);
+    power_bar.set_size(100, 15);
     power_bar.set_cur_val(0);
     power_bar.set_max_val(100);
+
+    stamina_bar1.set_size(30, 5);
+    stamina_bar1.set_cur_val(MAX_STAMINA);
+    stamina_bar1.set_max_val(MAX_STAMINA);
+
     int x, y, dir, xdelta, ydelta;
     std::vector<int> position;
 
@@ -60,17 +65,6 @@ int main()
                 window.close();
 
             if (event.type == sf::Event::KeyPressed){
-                /*hp_bar.set_max_val(1000);
-                hp_bar.set_cur_val(300);
-                hp_bar.set_pos(800, 400);
-                hp_bar.set_size(30, 15);
-                hp_bar.draw_bar(window, sf::Color::White, sf::Color::Red);*/
-                //arrow1.draw_arrow(window, sf::Color::White);
-                //arrow1.rotate_arrow(10);
-                //window.clear();
-                
-                //missile1.set_missile(window, 0, 400, Arc);
-                //missile1.launch_missile(background, window, 100, 45);
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                     p.GetPlayerPosition(x, y, dir);
                     //printf("%d\n", y);
@@ -83,7 +77,7 @@ int main()
                     }
                 }
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-                    if(state == MOVE) {
+                    if(state == MOVE || state == STOP) {
                         state = WAIT_POWER;
                         power_bar.set_cur_val(0);
                         power = 0;
@@ -105,19 +99,35 @@ int main()
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && state == MOVE) {//key_con.get_cur_state() == Pressed_right
+        p.GetPlayerPosition(x, y, dir);
+        prev_x = x; prev_y = y;
+
+        if(stamina_bar1.get_cur_val() == 0){
+            if(state == MOVE){
+                state = STOP;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            dir = 1;
+            }
+            else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+                dir = -1;
+            }
+            p.SetPlayerPosition(x, y, dir);
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && state == MOVE) {
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.MoveRight();
             other = 1;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && state == MOVE) {//sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && state == MOVE) {
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.MoveLeft();
             other = 1;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && state == MOVE) {//sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && state == MOVE) {
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.MoveJump();
@@ -129,6 +139,11 @@ int main()
         p.SetPlayerMovement(xdelta, ydelta);
         p.PlayerMove();
 
+        p.GetPlayerPosition(x, y, dir);
+        if(x != prev_x || y != prev_y) {
+            stamina_bar1.dec_val(1);
+            printf("stamina : %lf\n", stamina_bar1.get_cur_val());
+        }
         /*if(state == FIRE){
             missile1.update_missile();
             position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
@@ -197,13 +212,15 @@ int main()
             }
         }
 
-        
         window.clear();
         m.LoadMapdata(window, 0);
         p.GetPlayerPosition(x, y, dir);
         
         hp_bar1.set_pos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10);
         hp_bar1.draw_bar(window, sf::Color::White, sf::Color::Red);
+
+        stamina_bar1.set_pos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10 - 5);
+        stamina_bar1.draw_bar(window, sf::Color::White, sf::Color::Green);
 
         if(state == WAIT_POWER){
             if(dir==-1)
@@ -239,7 +256,6 @@ int main()
         p.GetPlayerMovement(xdelta, ydelta);
         if (m.CheckCollisionP(x, y, xdelta, ydelta)) p.SetPlayerMovement(xdelta, ydelta - 1);
         p.PlayerMove();
-        
         p.DrawPlayerPosition(window);
         window.display();
     }

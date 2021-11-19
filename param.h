@@ -13,3 +13,4 @@
 #define PLAYER_Y_BOUND          35
 
 #define TIME_LIMIT  10000000
+#define MAX_STAMINA 1000

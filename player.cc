@@ -38,8 +38,14 @@ void GamePlayer::DrawPlayerPosition(sf::RenderWindow &window) {
         window.draw(character_death);
     }
     else {
-        if (direction == -1) character_alive.setPosition(posx - PLAYER_BASE_POSX, posy - PLAYER_BASE_POSY);
-        else character_alive.setPosition(posx - PLAYER_BASE_POSX + PLAYER_BASE_DIR, posy - PLAYER_BASE_POSY);
+        if (direction == -1) {
+            character_alive.setPosition(posx - PLAYER_BASE_POSX, posy - PLAYER_BASE_POSY);
+            character_alive.setScale(0.1, 0.1);
+        }
+        else {
+            character_alive.setPosition(posx - PLAYER_BASE_POSX + PLAYER_BASE_DIR, posy - PLAYER_BASE_POSY);
+            character_alive.setScale(-0.1, 0.1);
+        }
         window.draw(character_alive);
     }
 }
@@ -54,14 +60,12 @@ void GamePlayer::PlayerMove() {
 void GamePlayer::MoveRight() {
     movex += 1;
     if (posx + movex > MAX_MAP_POSX - PLAYER_X_BOUND) movex = MAX_MAP_POSX - PLAYER_X_BOUND - posx;
-    if (direction == -1) character_alive.setScale(-0.1, 0.1);
     direction = 1;
 }
 
 void GamePlayer::MoveLeft() {
     movex -= 1;
     if (posx + movex < PLAYER_X_BOUND) movex = PLAYER_X_BOUND - posx;
-    if (direction == 1) character_alive.setScale(0.1, 0.1);
     direction = -1;
 }
 
