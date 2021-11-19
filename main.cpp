@@ -120,11 +120,11 @@ int main()
             p.MoveJump();
         }
 
-        //p.Gravity();
-        //p.GetPlayerPosition(x, y, dir);
-        //p.GetPlayerMovement(xdelta, ydelta);
-        //m.CheckCollision(x, y, xdelta, ydelta);
-        //p.SetPlayerMovement(xdelta, ydelta);
+        p.GetPlayerPosition(x, y, dir);
+        p.GetPlayerMovement(xdelta, ydelta);
+        m.CheckGradient(x, y, xdelta, ydelta);
+        p.SetPlayerMovement(xdelta, ydelta);
+        p.PlayerMove();
 
         /*if(state == FIRE){
             missile1.update_missile();
@@ -224,16 +224,15 @@ int main()
 
         if(state == FIRE) missile1.draw_missile(window);
 
-        p.PlayerMove();
 
         p.Gravity();
         p.GetPlayerPosition(x, y, dir);
         p.GetPlayerMovement(xdelta, ydelta);
         if (m.CheckCollisionP(x, y, xdelta, ydelta)) p.SetPlayerMovement(xdelta, ydelta - 1);
+        p.PlayerMove();
         
         p.DrawPlayerPosition(window);
         window.display();
-        //sf::sleep(show_time);
     }
 
     return 0;
