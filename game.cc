@@ -1,13 +1,13 @@
 #include "game.h"
 
-Game::Game() {
-    //window = _window;
-    //window = sf::RenderWindow(sf::VideoMode(1600, 800), "SFML works!");
-    //sf::RenderWindow w(sf::VideoMode(1600, 800), "SFML works!");
+Game::Game(int _xlength, int _ylength) {
+    xlength = _xlength;
+    ylength = _ylength;
+    window = new sf::RenderWindow(sf::VideoMode(xlength, ylength), "WORMS SHOOTING GAME");
 }
 
 void Game::Display() {
-    window.display();
+    window->display();
 }
 
 void Game::StartGame() {
@@ -31,13 +31,13 @@ void Game::StartGame() {
             worm->SetTeamId(team_id_shuffle[j], worm_id_shuffle[i]);
             worm->SetPlayerPosition(create_position(g), 50, -1);
             worm->SetPlayerMovement(0, 0);
-
+            worm->LoadCharacter();
             worms.push_back(worm);
         }
     }
 
-    map.LoadBackgorund(window);
-    map.SetMapdata(window);
+    map.LoadBackgorund(*window);
+    map.SetMapdata(*window);
 
     power_bar.set_size(100, 15);
     power_bar.set_cur_val(0);
@@ -51,7 +51,7 @@ void Game::StartGame() {
 }
 
 bool Game::IsOpen() {
-    if (window.isOpen()) return true;
+    if (window->isOpen()) return true;
     else return false;
 }
 
@@ -65,25 +65,28 @@ void Game::GameLoop() {
         GamePlayer *tmp;
         int x, y, dir, xdelta, ydelta;
 
-        while(window.isOpen()) {
-            window.clear();
-            map.LoadMapdata(window, 0);
+        while(window->isOpen()) {
+            sf::Event event;
+            while (window->pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed)
+                    window->close();
+            }
 
-            /*for (int i = 0;i < Nteam * Nworm;i++) {
-                if (i != 0) continue;
-                tmp = worms.at(i);
+            window->clear();
+            map.LoadMapdata(*window, 0);
+
+            for (int i = 0;i < Nteam * Nworm;i++) {
+                tmp = worms[i];
                 tmp->Gravity();
                 tmp->GetPlayerPosition(x, y, dir);
                 tmp->GetPlayerMovement(xdelta, ydelta);
-                printf("%d -> x:%d, y:%d, xdel:%d, ydel:%d\n", i, x, y, xdelta, ydelta);
                 if (map.CheckCollisionGravity(x, y, xdelta, ydelta)) tmp->SetPlayerMovement(xdelta, ydelta - 1);
                 tmp->PlayerMove();
-                tmp->DrawPlayerPosition(window);
-            }*/
+                tmp->DrawPlayerPosition(*window);
+            }
 
-            window.display();
-
-            return;
+            window->display();
         }
     }
 }

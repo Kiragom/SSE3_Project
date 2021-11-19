@@ -12,7 +12,7 @@
 
 class Game {
     private:
-    sf::RenderWindow window;
+    sf::RenderWindow *window;
     unsigned int xlength;
     unsigned int ylength;
     int Nteam;
@@ -28,7 +28,7 @@ class Game {
     int FLAG_END;
 
     public:
-    Game();
+    Game(int _xlength, int _ylength);
     bool IsOpen();
     void Display();
     void StartGame();
