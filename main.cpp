@@ -173,7 +173,7 @@ int main()
             int delta_x, delta_y;
             missile1.get_delta(delta_x, delta_y);
 
-            if (m.CheckCollision(x, y, delta_x, delta_y)) {
+            if (m.CheckCollision(x, y, delta_x, delta_y) || ((x < 0 || x >= MAX_MAP_POSX) && (y <0 || y >= MAX_MAP_POSY))) {
                 state = MOVE;
                 m.DestroyMap(window, x + delta_x, y + delta_y);
                 m.LoadMapdata(window, 1);
@@ -270,7 +270,7 @@ int main()
         p.GetPlayerMovement(xdelta, ydelta);
         if (m.CheckCollisionP(x, y, xdelta, ydelta)) {
             p.SetPlayerMovement(xdelta, ydelta - 1);
-            state = MOVE;
+            if(state == FALL) state = MOVE;
         }
         p.PlayerMove();
         p.DrawPlayerPosition(window);

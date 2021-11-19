@@ -78,7 +78,7 @@ void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
 }
 
 bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
-    bool collision = false;
+    bool collision = false, out_of_map = false;
     int startx = x, starty = y;
     int endx = x + xdelta, endy = y + ydelta;
     int unitx = (xdelta < 0) ? -1 : 1;
@@ -87,6 +87,7 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
     if (startx != endx && starty != endy) lean = (float)(endy - starty) / (float)(endx - startx);
 
     while(startx != endx || starty != endy) {
+        if(startx < 0 || startx > MAX_MAP_POSX || starty < 0 || starty > MAX_MAP_POSY) out_of_map = true;
         if (startx == endx && starty != endy) starty += unity;
         else if (startx != endx && starty == endy) startx += unitx;
         else {
@@ -97,6 +98,7 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
 
         for (int x = startx-5;x < startx+5;x++) {
             for (int y = starty-5;y < starty+5;y++) {
+                if(x < 0 || x >= MAX_MAP_POSX || y < 0 || y > MAX_MAP_POSY) continue;
                 if (mapdata[x][y]) {
                     collision = true;
                     break;
@@ -105,9 +107,11 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
         }
         if (collision) break;
     }
-
-    xdelta = startx - x;
-    ydelta = starty - y;
+    
+    if(!out_of_map){
+        xdelta = startx - x;
+        ydelta = starty - y;
+    }
 
     return collision;
 }
