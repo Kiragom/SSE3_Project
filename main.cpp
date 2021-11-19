@@ -268,13 +268,28 @@ int main()
         p.Gravity();
         p.GetPlayerPosition(x, y, dir);
         p.GetPlayerMovement(xdelta, ydelta);
-        if (m.CheckCollisionP(x, y, xdelta, ydelta)) {
+        if (m.CheckCollisionGravity(x, y, xdelta, ydelta)) {
             p.SetPlayerMovement(xdelta, ydelta - 1);
             if(state == FALL) state = MOVE;
         }
         p.PlayerMove();
         p.DrawPlayerPosition(window);
         window.display();
+    }
+
+    return 0;
+}
+
+#include "game.h"
+#include <iostream>
+#include <SFML/Graphics.hpp>
+
+int main() {
+    Game WORMS(1600, 800);
+    WORMS.StartGame();
+
+    while(WORMS.IsOpen()) {
+        WORMS.GameLoop();
     }
 
     return 0;
