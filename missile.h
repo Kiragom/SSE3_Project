@@ -2,12 +2,6 @@
 #ifndef MISSILE
 #define MISSILE
 
-enum missile_state{
-    Ready,
-    Flight,
-    Explosion
-};
-
 enum fire_shape{
     Arc,
     Bounce
@@ -15,7 +9,6 @@ enum fire_shape{
 
 class Missile{
     private:
-        int state = Ready;
         int fire_mode = Arc;
         float pos_x, pos_y;
         float power, angle, init_x_v, init_y_v, cur_x_v, cur_y_v;
