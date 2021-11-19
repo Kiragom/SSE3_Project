@@ -12,8 +12,8 @@ class GamePlayer {
     int movex;
     int movey;
     int team;
-    int death;
-    int turn;
+    int id;
+    int death = 0;
     int direction;
 
     public:
@@ -22,6 +22,9 @@ class GamePlayer {
     void GetPlayerPosition(int& x, int& y, int& dir);
     void SetPlayerMovement(int xdelta, int ydelta);
     void GetPlayerMovement(int& xdelta, int& ydelta);
+    void SetTeamId(int _team, int _id);
+    void GetTeamId(int& _team, int& _id);
+    bool IsDeath();
     void PlayerMove();
     void MoveRight();
     void MoveLeft();

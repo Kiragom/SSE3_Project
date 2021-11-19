@@ -31,6 +31,21 @@ void GamePlayer::GetPlayerMovement(int& xdelta, int& ydelta) {
     ydelta = movey;
 }
 
+void GamePlayer::SetTeamId(int _team, int _id) {
+    team = _team;
+    id = _id;
+}
+
+void GamePlayer::GetTeamId(int& _team, int& _id) {
+    _team = team;
+    _id = id;
+}
+
+bool GamePlayer::IsDeath() {
+    if (death) return true;
+    else false;
+}
+
 void GamePlayer::DrawPlayerPosition(sf::RenderWindow &window) {
     if (death) {
         if (direction == -1) character_death.setPosition(posx - PLAYER_BASE_POSX, posy - PLAYER_BASE_POSY);
