@@ -16,6 +16,7 @@ class Missile{
     public:
         void update_missile();
         void set_missile(float pos_x_, float pos_y_, float power_, float angle_, int fire_mode_);
+        void get_delta(int& delta_x, int& delta_y);
         void draw_missile(sf::RenderWindow &window);
         int get_pos_x();
         int get_pos_y();

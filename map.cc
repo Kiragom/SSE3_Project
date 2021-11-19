@@ -1,8 +1,11 @@
 #include "map.h"
+#include <cstdlib>
+#include <fstream>
 
 void GameMap::LoadBackgorund(sf::RenderWindow &window) {
     background_image.loadFromFile(BACKGROUND_FILE);
     background.setTexture(background_image);
+    map_image.loadFromFile("test.jpg");
 
     screen.create(1600, 800);
     screen.clear();
@@ -10,20 +13,24 @@ void GameMap::LoadBackgorund(sf::RenderWindow &window) {
 }
 
 void GameMap::SetMapdata(sf::RenderWindow &window) {
+    int data;
+    std::ifstream fin;
+    fin.open("map1.txt");
+
     for (int x = 0;x <= 1600;x++) {
         for (int y = 0;y <= 800;y++) {
-            if (y < 400 || x < 400 || x > 1200) mapdata[x][y] = 0;
-            else mapdata[x][y] = 1;
-            if (y >= 400 && ((6*x + y > 2800)) && x < 400) mapdata[x][y] = 1;
+            fin >> data;
+            mapdata[x][y] = data;
         }
     }
+    fin.close();
 
     sf::Vertex vertex;
     for (int x = 0;x <= 1600;x++) {
         for (int y = 0;y <= 800;y++) {
             if (mapdata[x][y]) {
                 vertex.position = sf::Vector2f(x, y);
-                vertex.color = sf::Color::Green;
+                vertex.color = map_image.getPixel(x, y);
                 screen.draw(&vertex, 1, sf::Points, sf::BlendNone);
             }
         }
@@ -37,25 +44,6 @@ void GameMap::SetMapdata(sf::RenderWindow &window) {
 
 void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
     if (DELETE) {
-        //screen.clear();
-        //screen.draw(background);
-
-        sf::Vertex vertex;
-        /*for (int x = 0;x <= 1600;x++) {
-            for (int y = 0;y <= 800;y++) {
-                if (mapdata[x][y]) {
-                    vertex.position = sf::Vector2f(x, y);
-                    vertex.color = sf::Color::Green;
-                    screen.draw(&vertex, 1, sf::Points);
-                }
-            }
-        }*/
-
-        /*sf::CircleShape c(20);
-        c.setFillColor(sf::Color::Transparent);
-        c.setPosition(800, 600);
-        screen.draw(c, sf::BlendNone);*/
-
         screen.display();
         screen_image = screen.getTexture();
         sprite.setTexture(screen_image);
@@ -70,7 +58,6 @@ void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
 
 void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
     int distance;
-
     for (int x = posx - 40;x <= posx + 40;x++) {
         for (int y = posy - 40;y <= posy + 40;y++) {
             if (x < 0 || x > MAX_MAP_POSX) continue;
@@ -85,15 +72,47 @@ void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
     }
 
     sf::CircleShape c(40);
-        c.setFillColor(sf::Color::Transparent);
-        c.setPosition(posx-40, posy-40);
-        screen.draw(c, sf::BlendNone);
+    c.setFillColor(sf::Color::Transparent);
+    c.setPosition(posx-40, posy-40);
+    screen.draw(c, sf::BlendNone);
 }
 
-std::vector<int> GameMap::CheckCollision(int x, int y) const {
-    std::vector<int> position;
+void GameMap::CheckCollisionPlayer(int& x, int& y, int &xdelta, int &ydelta) {
+    int startx = x, starty = y;
+    int endx = x + xdelta, endy = y + ydelta;
+    int unitx = (xdelta < 0) ? -1 : 1;
+    int unity = (ydelta < 0) ? -1 : 1;
+    float lean, gradient;
+    if (startx != endx && starty != endy) lean = (float)(endy - starty) / (float)(endx - startx);
 
-    if (mapdata[x][y] == 0) {
+    while(startx != endx || starty != endy) {
+        if (startx == endx && starty != endy) {
+            if (mapdata[startx][starty + unity]) break;
+            starty += unity;
+        }
+        else if (startx != endx && starty == endy) {
+            if (mapdata[startx + unitx][starty]) break;
+            startx += unitx;
+        }
+        else {
+            float gradient = (float)(endy - starty) / (float)(endx - startx);
+            if (gradient <= lean) {
+                if (mapdata[startx][starty + unity]) break;
+                starty += unity;
+            }
+            else {
+                if (mapdata[startx + unitx][starty]) break;
+                startx += unitx;
+            }
+        }
+    }
+
+    xdelta = startx - x;
+    ydelta = starty - y;
+
+    return;
+
+    /*if (mapdata[x][y] == 0) {
         position.push_back(0);
         return position;
     }
@@ -108,7 +127,7 @@ std::vector<int> GameMap::CheckCollision(int x, int y) const {
         position.push_back(posy);
 
         return position;
-    }
+    }*/
 }
 
 int GameMap::CheckGradient(int x, int y, int direction) const {

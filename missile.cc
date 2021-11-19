@@ -20,6 +20,10 @@ int Missile::get_pos_y(void){
     return (int)round(pos_y);
 }
 
+void Missile::get_delta(int& delta_x, int& delta_y){
+    
+}
+
 /*void Missile::launch_missile(sf::RenderWindow &window, float power_, float angle_){
     sf::Clock clock;
     sf::Clock timer;

@@ -34,7 +34,7 @@ int main()
     m.LoadBackgorund(window);
     m.SetMapdata(window);
     p.LoadCharacter();
-    p.SetPlayerPosition(800, 200, 1);
+    p.SetPlayerPosition(800, 200, -1);
     Bar hp_bar1;
     Bar power_bar;
     Key_control key_con;
@@ -48,6 +48,8 @@ int main()
     power_bar.set_size(100, 30);
     power_bar.set_cur_val(0);
     power_bar.set_max_val(100);
+    int x, y, dir, xdelta, ydelta;
+    std::vector<int> position;
 
     while (window.isOpen())
     {
@@ -70,10 +72,9 @@ int main()
                 //missile1.set_missile(window, 0, 400, Arc);
                 //missile1.launch_missile(background, window, 100, 45);
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-                    vector <int> player_pos = p.GetPlayerPosition();
-                    //printf("player_pos!\n");
+                    p.GetPlayerPosition(x, y, dir);
                     if(state == WAIT_ANGLE){
-                        missile1.set_missile(player_pos[0], player_pos[1], power, angle, Arc);
+                        missile1.set_missile(x, y, power, angle, Arc);
                         state = FIRE;
                     }
                 }
@@ -117,26 +118,31 @@ int main()
             //m.LoadMapdata(window, 0);
             p.MoveJump();
         }
-        
 
-        std::vector<int> position = p.GetPlayerPosition();
+        //p.Gravity();
+        p.GetPlayerPosition(x, y, dir);
+        p.GetPlayerMovement(xdelta, ydelta);
+        m.CheckCollisionPlayer(x, y, xdelta, ydelta);
+        p.SetPlayerMovement(xdelta, ydelta);
+
+        /*p.GetPlayerPosition(x, y, dir);
         if (other == 1) {
-            int change = m.CheckGradient(position.at(0) + 10, position.at(1) + 30, position.at(2));
+            int change = m.CheckGradient(x + 10, y + 30, dir);
             if (change == -1) {
-                if (position.at(2) == 1) p.SetPlayerPosition(position.at(0) - 1, position.at(1), position.at(2));
-                else p.SetPlayerPosition(position.at(0) + 1, position.at(1), position.at(2));
+                if (dir == 1) p.SetPlayerPosition(x - 1, y, dir);
+                else p.SetPlayerPosition(x + 1, y, dir);
             }
-            else p.SetPlayerPosition(position.at(0), change - 29, position.at(2));
+            else p.SetPlayerPosition(x, change - 29, dir);
         }
 
-        position = m.CheckCollision(position.at(0) + 10, position.at(1) + 30);
-        if (position.at(0) == 0) {
+        position = m.CheckCollision(x + 10, y + 30);
+        if (x == 0) {
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.Gravity();
-        }
+        }*/
 
-        position = p.GetPlayerPosition();
+        p.GetPlayerPosition(x, y, dir);
         int change = m.CheckGradient(position.at(0) + 10, position.at(1) + 30, position.at(2));
         if (change == -1) {
             if (position.at(2) == 1) p.SetPlayerPosition(position.at(0) - 1, position.at(1), position.at(2));
@@ -144,17 +150,17 @@ int main()
         }
         else p.SetPlayerPosition(position.at(0), change - 29, position.at(2));
 
-        if(state == FIRE){
+        /*if(state == FIRE){
             missile1.update_missile();
             //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
-            position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
+            m.CheckCollisionPlayer(missile1.get_pos_x(), missile1.get_pos_y());
             if (position.at(0) == 1) {
                 state = MOVE;
                 m.DestroyMap(window, missile1.get_pos_x(), position.at(1));
                 m.LoadMapdata(window, 1);
             }
             //sf::sleep(show_time);
-        }
+        }*/
 
         if(state == WAIT_POWER){
             power += power_delta;
@@ -170,6 +176,13 @@ int main()
                 power_delta = -power_delta;
             }
         }
+        /*p.GetPlayerPosition(x, y, dir);
+        int change = m.CheckGradient(x + 10, y + 30, dir);
+        if (change == -1) {
+            if (dir == 1) p.SetPlayerPosition(x - 1, y, dir);
+            else p.SetPlayerPosition(x + 1, y, dir);
+        }
+        else p.SetPlayerPosition(x, change - 29, dir);*/
 
         if(state == WAIT_ANGLE){
             if(player_dir == LEFT){
@@ -195,12 +208,21 @@ int main()
                 }
             }
         }
+        p.PlayerMove();
 
+        p.Gravity();
+        p.GetPlayerPosition(x, y, dir);
+        p.GetPlayerMovement(xdelta, ydelta);
+        m.CheckCollisionPlayer(x, y, xdelta, ydelta);
+        p.SetPlayerMovement(xdelta, ydelta);
+        
         window.clear();
         m.LoadMapdata(window, 0);
-        position = p.GetPlayerPosition();
-
-        hp_bar1.set_pos(position.at(0), position.at(1) - 20);
+        p.GetPlayerPosition(x, y, dir);
+        
+        hp_bar1.set_pos(x, y - 20);
+        
+        hp_bar1.set_pos(x, y - 20);
         hp_bar1.draw_bar(window, sf::Color::White, sf::Color::Red);
 
         if(state == WAIT_POWER){
@@ -209,7 +231,7 @@ int main()
         }
 
         if(state == WAIT_ANGLE){
-            fire_dir.set_arrow(position.at(0), position.at(1) + 20, angle);
+            fire_dir.set_arrow(x, y + 20, angle);
             fire_dir.draw_arrow(window, sf::Color::White);
         }
 
@@ -224,7 +246,7 @@ int main()
         }
 
         if(state == FIRE) missile1.draw_missile(window);
-    
+
         p.DrawPlayerPosition(window);
         window.display();
         //sf::sleep(show_time);
