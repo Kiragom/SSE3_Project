@@ -15,7 +15,9 @@ enum cur_state{
     MOVE,
     WAIT_POWER,
     WAIT_ANGLE,
-    STOP
+    STOP,
+    JUMP,
+    FALL
 };
 
 enum dir{
@@ -26,7 +28,7 @@ enum dir{
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
-    int flag = 0, other = 0, state = MOVE;
+    int flag = 0, other = 0, state = MOVE, jump_cnt = 0;
     int c = 0, player_dir = LEFT, prev_x, prev_y;
     float power_delta = 1.5, angle_delta = 1.5, power = 0, angle = 0;
     const sf::Time show_time = sf::seconds(0.05f);
@@ -115,13 +117,13 @@ int main()
             p.SetPlayerPosition(x, y, dir);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && state == MOVE) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && (state == MOVE || state == JUMP || state == FALL)) {
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.MoveRight();
             other = 1;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && state == MOVE) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && (state == MOVE || state == JUMP || state == FALL)) {
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.MoveLeft();
@@ -131,6 +133,18 @@ int main()
             //window.clear();
             //m.LoadMapdata(window, 0);
             p.MoveJump();
+            jump_cnt = 0;
+            state = JUMP;
+        }
+
+        if(state == JUMP){
+            if(jump_cnt <= MAX_JUMP_CNT){
+                jump_cnt++;
+                p.MoveJump();
+            }
+            else {
+                state = FALL;
+            }
         }
 
         p.GetPlayerPosition(x, y, dir);
@@ -254,7 +268,10 @@ int main()
         p.Gravity();
         p.GetPlayerPosition(x, y, dir);
         p.GetPlayerMovement(xdelta, ydelta);
-        if (m.CheckCollisionP(x, y, xdelta, ydelta)) p.SetPlayerMovement(xdelta, ydelta - 1);
+        if (m.CheckCollisionP(x, y, xdelta, ydelta)) {
+            p.SetPlayerMovement(xdelta, ydelta - 1);
+            state = MOVE;
+        }
         p.PlayerMove();
         p.DrawPlayerPosition(window);
         window.display();
