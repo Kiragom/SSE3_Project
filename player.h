@@ -12,6 +12,7 @@ class GamePlayer {
     int movex;
     int movey;
     int team;
+    int id;
     int death;
     int turn;
     int direction;
