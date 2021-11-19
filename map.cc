@@ -110,23 +110,6 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
     ydelta = starty - y;
 
     return collision;
-
-    /*if (mapdata[x][y] == 0) {
-        position.push_back(0);
-        return position;
-    }
-    else {
-        position.push_back(1);
-
-        int posy = y;
-        while(mapdata[x][posy]) {
-            posy--;
-            if (posy <= 0) break;
-        }
-        position.push_back(posy);
-
-        return position;
-    }*/
 }
 
 bool GameMap::CheckCollisionP(int& x, int& y, int &xdelta, int &ydelta) {
@@ -157,32 +140,13 @@ bool GameMap::CheckCollisionP(int& x, int& y, int &xdelta, int &ydelta) {
     ydelta = starty - y;
 
     return collision;
-
-    /*if (mapdata[x][y] == 0) {
-        position.push_back(0);
-        return position;
-    }
-    else {
-        position.push_back(1);
-
-        int posy = y;
-        while(mapdata[x][posy]) {
-            posy--;
-            if (posy <= 0) break;
-        }
-        position.push_back(posy);
-
-        return position;
-    }*/
 }
 
 void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
-    if (ydelta == 0) return;
-    if (xdelta == 0) return;
-
     int startx = x, starty = y;
-    int endx = x + xdelta;
+    int endx = x + xdelta, endy = y + ydelta;
     int unitx = (xdelta < 0) ? -1 : 1;
+    int unity = (ydelta < 0) ? -1 : 1;
     int cnt, check;
 
     while(startx != endx) {
@@ -191,29 +155,25 @@ void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
         check = -1;
 
         while(cnt < 2) {
-            if (mapdata[startx][starty + cnt] == 0) {
+            if (mapdata[startx][endy - cnt] == 0) {
                 check = cnt;
                 break;
             }
-            cnt++;
+            else cnt++;
         }
 
         if (check == -1) {
             startx -= unitx;
             break;
         }
-        else starty += cnt;
+        else endy -= cnt;
+    }
+
+    while(endy != y) {
+        if (mapdata[startx][endy - PLAYER_BASE_POSY]) endy++;
+        else break;
     }
 
     xdelta = startx - x;
-    ydelta = starty - y;
-
-
-
-    /*int cnt = 0;
-    while(cnt < 3) {
-        if (mapdata[x][y] == 0) return y;
-        cnt++;
-        y--;
-    }*/
+    ydelta = endy - y;
 }
