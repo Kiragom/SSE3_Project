@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+/*#include <SFML/Graphics.hpp>
 #include "key_control.h"
 #include "missile.h"
 #include "indicator.h"
@@ -67,7 +67,6 @@ int main()
             if (event.type == sf::Event::KeyPressed){
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                     p.GetPlayerPosition(x, y, dir);
-                    //printf("%d\n", y);
                     if(state == WAIT_ANGLE){
                         if(dir==-1)
                             missile1.set_missile(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
@@ -116,20 +115,14 @@ int main()
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && state == MOVE) {
-            //window.clear();
-            //m.LoadMapdata(window, 0);
             p.MoveRight();
             other = 1;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && state == MOVE) {
-            //window.clear();
-            //m.LoadMapdata(window, 0);
             p.MoveLeft();
             other = 1;
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && state == MOVE) {
-            //window.clear();
-            //m.LoadMapdata(window, 0);
             p.MoveJump();
         }
 
@@ -144,16 +137,9 @@ int main()
             stamina_bar1.dec_val(1);
             printf("stamina : %lf\n", stamina_bar1.get_cur_val());
         }
-        /*if(state == FIRE){
-            missile1.update_missile();
-            position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
-            if (position.at(0) == 1) {
-                state = WAIT;
-                m.DestroyMap(window, missile1.get_pos_x(), position.at(1));*/
 
             
         if(state == FIRE){
-            //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
             x = missile1.get_pos_x();
             y = missile1.get_pos_y();
             int delta_x, delta_y;
@@ -169,7 +155,6 @@ int main()
             }
             unsigned int cnt = 0;
             while(cnt != TIME_LIMIT) cnt++;
-            //sf::sleep(show_time);
         }
 
         if(state == WAIT_POWER){
@@ -258,6 +243,19 @@ int main()
         p.PlayerMove();
         p.DrawPlayerPosition(window);
         window.display();
+    }
+
+    return 0;
+}*/
+
+#include "game.h"
+
+int main() {
+    Game WORMS();
+    WORMS.StartGame();
+WORMS.Display();
+    while(WORMS.IsOpen()) {
+        //WORMS.GameLoop();
     }
 
     return 0;

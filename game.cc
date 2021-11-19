@@ -1,10 +1,13 @@
 #include "game.h"
 
-Game::Game(int _xlength, int _ylength) {
-    xlength = _xlength;
-    ylength = _ylength;
-    window.create(sf::VideoMode(1600, 800), "WORMS SHOOTNG GAME\n");
+Game::Game() {
+    //window = _window;
+    //window = sf::RenderWindow(sf::VideoMode(1600, 800), "SFML works!");
     //sf::RenderWindow w(sf::VideoMode(1600, 800), "SFML works!");
+}
+
+void Game::Display() {
+    window.display();
 }
 
 void Game::StartGame() {
@@ -43,6 +46,8 @@ void Game::StartGame() {
     stamina_bar.set_size(30, 5);
     stamina_bar.set_cur_val(MAX_STAMINA);
     stamina_bar.set_max_val(MAX_STAMINA);
+
+    FLAG_END = 0;
 }
 
 bool Game::IsOpen() {
@@ -51,5 +56,34 @@ bool Game::IsOpen() {
 }
 
 void Game::GameLoop() {
-    if ()
+    if (FLAG_END) {
+
+    }
+
+    else {
+        GamePlayer *master_worm = worms.at(0);
+        GamePlayer *tmp;
+        int x, y, dir, xdelta, ydelta;
+
+        while(window.isOpen()) {
+            window.clear();
+            map.LoadMapdata(window, 0);
+
+            /*for (int i = 0;i < Nteam * Nworm;i++) {
+                if (i != 0) continue;
+                tmp = worms.at(i);
+                tmp->Gravity();
+                tmp->GetPlayerPosition(x, y, dir);
+                tmp->GetPlayerMovement(xdelta, ydelta);
+                printf("%d -> x:%d, y:%d, xdel:%d, ydel:%d\n", i, x, y, xdelta, ydelta);
+                if (map.CheckCollisionGravity(x, y, xdelta, ydelta)) tmp->SetPlayerMovement(xdelta, ydelta - 1);
+                tmp->PlayerMove();
+                tmp->DrawPlayerPosition(window);
+            }*/
+
+            window.display();
+
+            return;
+        }
+    }
 }

@@ -112,7 +112,7 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
     return collision;
 }
 
-bool GameMap::CheckCollisionP(int& x, int& y, int &xdelta, int &ydelta) {
+bool GameMap::CheckCollisionGravity(int& x, int& y, int &xdelta, int &ydelta) {
     bool collision = false;
     int startx = x, starty = y;
     int endx = x + xdelta, endy = y + ydelta;

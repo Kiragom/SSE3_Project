@@ -25,11 +25,12 @@ class Game {
     Bar stamina_bar;
     Missile missile;
     Arrow angle_arrow;
-    enum _GAMESTATE GAMESTATE;
+    int FLAG_END;
 
     public:
-    Game(int _xlength, int _ylength);
+    Game();
     bool IsOpen();
+    void Display();
     void StartGame();
     void GameLoop();
     void EndGame();
