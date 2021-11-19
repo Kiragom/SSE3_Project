@@ -116,9 +116,8 @@ int main()
             p.Gravity();
         }*/
 
-        /*if(state == FIRE){
+        if(state == FIRE){
             missile1.update_missile();
-            //printf("pos_x : %d pos_y : %d\n", missile1.get_pos_x(), missile1.get_pos_y());
             position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
             if (position.at(0) == 1) {
                 state = WAIT;
@@ -126,7 +125,7 @@ int main()
                 m.LoadMapdata(window, 1);
             }
             //sf::sleep(show_time);
-        }*/
+        }
 
         /*p.GetPlayerPosition(x, y, dir);
         int change = m.CheckGradient(x + 10, y + 30, dir);

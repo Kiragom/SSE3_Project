@@ -77,7 +77,8 @@ void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
     screen.draw(c, sf::BlendNone);
 }
 
-void GameMap::CheckCollisionPlayer(int& x, int& y, int &xdelta, int &ydelta) {
+bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
+    bool collision = false;
     int startx = x, starty = y;
     int endx = x + xdelta, endy = y + ydelta;
     int unitx = (xdelta < 0) ? -1 : 1;
@@ -86,31 +87,24 @@ void GameMap::CheckCollisionPlayer(int& x, int& y, int &xdelta, int &ydelta) {
     if (startx != endx && starty != endy) lean = (float)(endy - starty) / (float)(endx - startx);
 
     while(startx != endx || starty != endy) {
-        if (startx == endx && starty != endy) {
-            if (mapdata[startx][starty + unity]) break;
-            starty += unity;
-        }
-        else if (startx != endx && starty == endy) {
-            if (mapdata[startx + unitx][starty]) break;
-            startx += unitx;
-        }
+        if (startx == endx && starty != endy) starty += unity;
+        else if (startx != endx && starty == endy) startx += unitx;
         else {
             float gradient = (float)(endy - starty) / (float)(endx - startx);
-            if (gradient <= lean) {
-                if (mapdata[startx][starty + unity]) break;
-                starty += unity;
-            }
-            else {
-                if (mapdata[startx + unitx][starty]) break;
-                startx += unitx;
-            }
+            if (gradient <= lean) starty += unity;
+            else startx += unitx;
+        }
+
+        if (mapdata[startx][starty]) {
+            collision = true;
+            break;
         }
     }
 
     xdelta = startx - x;
     ydelta = starty - y;
 
-    return;
+    return collision;
 
     /*if (mapdata[x][y] == 0) {
         position.push_back(0);
@@ -130,7 +124,7 @@ void GameMap::CheckCollisionPlayer(int& x, int& y, int &xdelta, int &ydelta) {
     }*/
 }
 
-int GameMap::CheckGradient(int x, int y, int direction) const {
+void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
     int cnt = 0;
     while(cnt < 3) {
         if (mapdata[x][y] == 0) return y;
