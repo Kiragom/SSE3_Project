@@ -32,6 +32,7 @@ class GamePlayer {
     void GetTeamId(int& _team, int& _id);
     void SetHpBarColor(sf::Color bar_color);
     void SetHpBarPos(float pos_x, float pos_y);
+    void GetDamage(float damage);
     bool IsDeath();
     void PlayerMove();
     void MoveRight();

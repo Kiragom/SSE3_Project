@@ -138,6 +138,11 @@ bool GameMap::CheckCollisionGravity(int& x, int& y, int &xdelta, int &ydelta) {
             collision = true;
             break;
         }
+
+        if (mapdata[startx][starty - PLAYER_Y_BOUND]) {
+            collision = true;
+            break;
+        }
     }
 
     xdelta = startx - x;

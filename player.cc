@@ -58,6 +58,11 @@ void GamePlayer::SetHpBarPos(float pos_x, float pos_y){
     hp_bar.set_pos(pos_x, pos_y);
 }
 
+void GamePlayer::GetDamage(float damage){
+    hp_bar.dec_val(damage);
+    if(hp_bar.get_cur_val() == 0) death = 1;
+}
+
 void GamePlayer::DrawHpBar(sf::RenderWindow &window){
     hp_bar.draw_bar(window);
 }

@@ -23,6 +23,13 @@ void Missile::get_delta(int& delta_x, int& delta_y){
     delta_y *= -1;
 }
 
+void Missile::set_damage(float damage_){
+    damage = damage_;
+}
+
+float Missile::get_damage(void){
+    return damage;
+}
 /*void Missile::launch_missile(sf::RenderWindow &window, float power_, float angle_){
     sf::Clock clock;
     sf::Clock timer;

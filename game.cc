@@ -62,6 +62,26 @@ bool Game::IsOpen() {
     else return false;
 }
 
+void Game::DamagePlayers(int pos_x, int pos_y, float damage, GamePlayer* cur_worm) {
+    int player_x, player_y, player_dir, cur_team_id, cur_worm_id;
+
+    cur_worm->GetTeamId(cur_team_id, cur_worm_id);
+
+    for(int i=0; i<Nteam*Nworm; i++){
+        int target_team_id, target_worm_id;
+        worms[i]->GetTeamId(target_team_id, target_worm_id);
+        if(cur_team_id == target_team_id) continue;
+
+        worms[i]->GetPlayerPosition(player_x, player_y, player_dir);
+        int dis = (pos_x - player_x) * (pos_x - player_x) + (pos_y - player_y) * (pos_y - player_y);
+        if(dis <= 1600){
+            float total_damage = ((float)dis / 1600) * damage;
+            printf("total damage : %lf\n", MIN_DAMAGE + total_damage);
+            worms[i]->GetDamage(MIN_DAMAGE + total_damage);
+        }
+    }
+}
+
 void Game::GameLoop() {
     if (FLAG_END) {
 
@@ -77,6 +97,13 @@ void Game::GameLoop() {
 
         stamina_bar.set_cur_val(MAX_STAMINA);
         power_bar.set_cur_val(0);
+        missile.set_damage(MISSILE_DAMAGE);
+
+        if(master_worm->IsDeath()){
+             worms.erase(worms.begin());
+            worms.push_back(master_worm);
+            return;
+        }
 
         while(window->isOpen()) {
             sf::Event event;
@@ -179,6 +206,7 @@ void Game::GameLoop() {
                 if (map.CheckCollision(x, y, delta_x, delta_y) || (y >= MAX_MAP_POSY)) {
                     map.DestroyMap(*window, x + delta_x, y + delta_y);
                     map.LoadMapdata(*window, 1);
+                    DamagePlayers(x + delta_x, y + delta_y, missile.get_damage(), master_worm);
                     break;
                 }
                 else{
@@ -281,20 +309,22 @@ void Game::GameLoop() {
             for (int i = 0;i < Nteam * Nworm;i++) {
                 tmp = worms[i];
                 if(tmp == master_worm) continue;
-                
+
                 tmp->Gravity();
                 tmp->GetPlayerPosition(x, y, dir);
                 tmp->GetPlayerMovement(xdelta, ydelta);
                 if (map.CheckCollisionGravity(x, y, xdelta, ydelta)) tmp->SetPlayerMovement(xdelta, ydelta - 1);
                 tmp->PlayerMove();
-                tmp->SetHpBarPos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10);
-                tmp->DrawHpBar(*window);
                 tmp->DrawPlayerPosition(*window);
+                if(!tmp->IsDeath()){
+                    tmp->SetHpBarPos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10);
+                    tmp->DrawHpBar(*window);
+                }
             }
 
             window->display();
         }
-    
+
         worms.erase(worms.begin());
         worms.push_back(master_worm);
     }
