@@ -88,7 +88,6 @@ void Game::GameLoop() {
                 if (event.type == sf::Event::KeyPressed){
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                         master_worm->GetPlayerPosition(x, y, dir);
-                        //printf("%d\n", y);
                         if(state == WAIT_ANGLE){
                             if(dir==-1)
                                 missile.set_missile(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
@@ -178,9 +177,9 @@ void Game::GameLoop() {
                 missile.get_delta(delta_x, delta_y);
 
                 if (map.CheckCollision(x, y, delta_x, delta_y) || (y >= MAX_MAP_POSY)) {
-                    state = MOVE;
                     map.DestroyMap(*window, x + delta_x, y + delta_y);
                     map.LoadMapdata(*window, 1);
+                    break;
                 }
                 else{
                     missile.update_missile();
@@ -294,7 +293,9 @@ void Game::GameLoop() {
             }
 
             window->display();
-            //return;
         }
+    
+        worms.erase(worms.begin());
+        worms.push_back(master_worm);
     }
 }
