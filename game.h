@@ -34,5 +34,6 @@ class Game {
     void StartGame();
     void GameLoop();
     void DamagePlayers(int pos_x, int pos_y, float damage, GamePlayer* cur_worm);
+    void IsEnd();
     void EndGame();
 };

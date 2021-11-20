@@ -82,9 +82,32 @@ void Game::DamagePlayers(int pos_x, int pos_y, float damage, GamePlayer* cur_wor
     }
 }
 
+void Game::IsEnd() {
+    int alive_team[Nteam], team, id;
+    for (int i = 0;i < Nteam;i++) alive_team[i] = 0;
+
+    for(int i=0; i<Nteam*Nworm; i++){
+        if (!worms[i]->IsDeath()) {
+            worms[i]->GetTeamId(team, id);
+            alive_team[team]++;
+        }
+    }
+
+    int cnt = 0;
+    for (int i = 0;i < Nteam;i++) {
+        if (alive_team[i]) {
+            cnt++;
+            //team = i;
+        }
+    }
+
+    if (cnt == 1) FLAG_END = 1;
+}
+
 void Game::GameLoop() {
     if (FLAG_END) {
-
+        window->clear();
+        window->display();
     }
 
     else {
@@ -100,7 +123,7 @@ void Game::GameLoop() {
         missile.set_damage(MISSILE_DAMAGE);
 
         if(master_worm->IsDeath()){
-             worms.erase(worms.begin());
+            worms.erase(worms.begin());
             worms.push_back(master_worm);
             return;
         }
@@ -283,16 +306,6 @@ void Game::GameLoop() {
                 angle_arrow.draw_arrow(*window, sf::Color::White);
             }
 
-            /*if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
-                window.clear();
-                m.DestroyMap(window, event.mouseButton.x, event.mouseButton.y);
-                m.LoadMapdata(window, 1);
-                flag++;
-            }
-            if (event.type == sf::Event::MouseButtonReleased && flag == 1) {
-                flag--;
-            }*/
-
             if(state == FIRE) missile.draw_missile(*window);
 
 
@@ -327,5 +340,6 @@ void Game::GameLoop() {
 
         worms.erase(worms.begin());
         worms.push_back(master_worm);
+        IsEnd();
     }
 }

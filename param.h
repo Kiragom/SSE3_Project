@@ -24,7 +24,7 @@
 #define PI 3.1415926535
 #define GRAVITY 74
 #define MISSILE_DAMAGE 25
-#define MIN_DAMAGE 10
+#define MIN_DAMAGE 50
 
 #define BAR_WIDTH 30
 #define BAR_HEIGHT 5
