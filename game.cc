@@ -14,7 +14,7 @@ void Game::Display() {
 
 void Game::StartGame() {
     Nteam = 2;
-    Nworm = 3;
+    Nworm = 1;
 
     sf::Color color_list[3] = {sf::Color::Red, sf::Color::Blue};
 
@@ -75,9 +75,9 @@ void Game::DamagePlayers(int pos_x, int pos_y, float damage, GamePlayer* cur_wor
         worms[i]->GetPlayerPosition(player_x, player_y, player_dir);
         int dis = (pos_x - player_x) * (pos_x - player_x) + (pos_y - player_y) * (pos_y - player_y);
         if(dis <= 1600){
-            float total_damage = ((float)dis / 1600) * damage;
-            printf("total damage : %lf\n", MIN_DAMAGE + total_damage);
-            worms[i]->GetDamage(MIN_DAMAGE + total_damage);
+            float total_damage = MIN_DAMAGE + (((float)dis / 1600) * damage);
+            printf("total damage : %lf\n", total_damage);
+            worms[i]->GetDamage(total_damage);
         }
     }
 }
@@ -106,8 +106,41 @@ void Game::IsEnd() {
 
 void Game::GameLoop() {
     if (FLAG_END) {
-        window->clear();
-        window->display();
+        while(window->isOpen()) {
+            sf::Event event;
+            while (window->pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed)
+                    window->close();
+
+                if (event.type == sf::Event::KeyPressed){
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                        window->close();
+                    }
+                }
+            }
+            window->clear();
+            sf::Text text;
+            sf::Font font;
+            sf::Vector2f pos;
+            font.loadFromFile("example_font.ttf");
+            // select the font
+            text.setFont(font); // font is a sf::Font
+            text.setPosition(630, 330);
+            // set the string to display
+            text.setString("Game Over");
+
+            // set the character size
+            text.setCharacterSize(70); // in pixels, not points!
+
+            // set the color
+            text.setFillColor(sf::Color::Red);
+
+            // set the text style
+            text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+            window->draw(text);
+            window->display();
+        }
     }
 
     else {
@@ -168,7 +201,7 @@ void Game::GameLoop() {
                     }
                 }
             }
-
+            if(master_worm->IsDeath()) break;
             master_worm->GetPlayerPosition(x, y, dir);
             prev_x = x; prev_y = y;
 
