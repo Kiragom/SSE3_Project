@@ -4,28 +4,12 @@
 #include "indicator.h"
 #include <iostream>
 #include <vector>
-
 #include "map.h"
 #include "player.h"
 
 using namespace std;
 
-enum cur_state{
-    FIRE,
-    MOVE,
-    WAIT_POWER,
-    WAIT_ANGLE,
-    STOP,
-    JUMP,
-    FALL
-};
-
-enum dir{
-    LEFT,
-    RIGHT
-};
-
-int main()
+/*int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
     int flag = 0, other = 0, state = MOVE, jump_cnt = 0;
@@ -158,12 +142,6 @@ int main()
             stamina_bar1.dec_val(1);
             printf("stamina : %lf\n", stamina_bar1.get_cur_val());
         }
-        /*if(state == FIRE){
-            missile1.update_missile();
-            position = m.CheckCollision(missile1.get_pos_x(), missile1.get_pos_y());
-            if (position.at(0) == 1) {
-                state = WAIT;
-                m.DestroyMap(window, missile1.get_pos_x(), position.at(1));*/
 
             
         if(state == FIRE){
@@ -278,11 +256,9 @@ int main()
     }
 
     return 0;
-}
+}*/
 
 #include "game.h"
-#include <iostream>
-#include <SFML/Graphics.hpp>
 
 int main() {
     Game WORMS(1600, 800);

@@ -1,10 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "missile.h"
-
-#define MAX_DIST 100
-#define PI 3.1415926535
-#define GRAVITY 74
+#include "param.h"
 
 void Missile::update_missile(void){
     pos_x = pos_x + cur_x_v;

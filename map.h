@@ -2,6 +2,9 @@
 #include <vector>
 #include "param.h"
 
+#ifndef MAP
+#define MAP
+
 class GameMap {
     private:
     sf::Image map_image;
@@ -23,3 +26,5 @@ class GameMap {
 
     friend class GamePlayer;
 };
+
+#endif

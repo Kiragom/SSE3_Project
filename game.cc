@@ -1,4 +1,6 @@
 #include "game.h"
+#include "param.h"
+#include "player.h"
 
 Game::Game(int _xlength, int _ylength) {
     xlength = _xlength;
@@ -13,6 +15,8 @@ void Game::Display() {
 void Game::StartGame() {
     Nteam = 2;
     Nworm = 3;
+
+    sf::Color color_list[3] = {sf::Color::Red, sf::Color::Blue};
 
     std::vector<int> team_id_shuffle;
     for (int i = 0;i < Nteam;i++) team_id_shuffle.push_back(i);
@@ -32,6 +36,7 @@ void Game::StartGame() {
             worm->SetPlayerPosition(create_position(g), 50, -1);
             worm->SetPlayerMovement(0, 0);
             worm->LoadCharacter();
+            worm->SetHpBarColor(color_list[j]);
             worms.push_back(worm);
         }
     }
@@ -42,10 +47,12 @@ void Game::StartGame() {
     power_bar.set_size(100, 15);
     power_bar.set_cur_val(0);
     power_bar.set_max_val(100);
+    power_bar.set_color(sf::Color::Cyan);
 
     stamina_bar.set_size(30, 5);
     stamina_bar.set_cur_val(MAX_STAMINA);
     stamina_bar.set_max_val(MAX_STAMINA);
+    stamina_bar.set_color(sf::Color::Yellow);
 
     FLAG_END = 0;
 }
@@ -63,7 +70,13 @@ void Game::GameLoop() {
     else {
         GamePlayer *master_worm = worms.at(0);
         GamePlayer *tmp;
-        int x, y, dir, xdelta, ydelta;
+        Missile missile;
+        float power_delta = POWER_DELTA, angle_delta = ANGLE_DELTA, power = 0, angle = 0;
+        int x, y, prev_x, prev_y, dir, xdelta, ydelta, player_dir = LEFT, jump_cnt = 0;
+        int state = MOVE;
+
+        stamina_bar.set_cur_val(MAX_STAMINA);
+        power_bar.set_cur_val(0);
 
         while(window->isOpen()) {
             sf::Event event;
@@ -71,22 +84,217 @@ void Game::GameLoop() {
             {
                 if (event.type == sf::Event::Closed)
                     window->close();
+
+                if (event.type == sf::Event::KeyPressed){
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                        master_worm->GetPlayerPosition(x, y, dir);
+                        //printf("%d\n", y);
+                        if(state == WAIT_ANGLE){
+                            if(dir==-1)
+                                missile.set_missile(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
+                            else
+                                missile.set_missile(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, Arc);
+                            state = FIRE;
+                        }
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                        if(state == MOVE || state == STOP) {
+                            state = WAIT_POWER;
+                            power_bar.set_cur_val(0);
+                            power = 0;
+                        }
+                        else if(state == WAIT_POWER) {
+                            master_worm->GetPlayerPosition(x, y, dir);
+                            state = WAIT_ANGLE;
+
+                            if(dir == LEFT) {
+                                player_dir = LEFT;
+                                angle = 180;
+                            }
+                            else {
+                                player_dir = RIGHT;
+                                angle = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            master_worm->GetPlayerPosition(x, y, dir);
+            prev_x = x; prev_y = y;
+
+            if(stamina_bar.get_cur_val() == 0){
+                if(state == MOVE){
+                    state = STOP;
+                }
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+                    dir = RIGHT;
+                }
+                else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+                    dir = LEFT;
+                }
+
+                master_worm->SetPlayerPosition(x, y, dir);
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && (state == MOVE || state == JUMP || state == FALL)) {
+                master_worm->MoveRight();
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && (state == MOVE || state == JUMP || state == FALL)) {
+                master_worm->MoveLeft();
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && state == MOVE) {
+                master_worm->MoveJump();
+                jump_cnt = 0;
+                state = JUMP;
+            }
+
+            if(state == JUMP){
+                if(jump_cnt <= MAX_JUMP_CNT){
+                    jump_cnt++;
+                    master_worm->MoveJump();
+                }
+                else {
+                    state = FALL;
+                }
+            }
+
+            master_worm->GetPlayerPosition(x, y, dir);
+            master_worm->GetPlayerMovement(xdelta, ydelta);
+            map.CheckGradient(x, y, xdelta, ydelta);
+            master_worm->SetPlayerMovement(xdelta, ydelta);
+            master_worm->PlayerMove();
+
+            master_worm->GetPlayerPosition(x, y, dir);
+            if(x != prev_x || y != prev_y) {
+                stamina_bar.dec_val(1);
+            }
+
+            if(state == FIRE){
+                x = missile.get_pos_x();
+                y = missile.get_pos_y();
+                int delta_x, delta_y;
+                missile.get_delta(delta_x, delta_y);
+
+                if (map.CheckCollision(x, y, delta_x, delta_y) || ((x < 0 || x >= MAX_MAP_POSX) && (y <0 || y >= MAX_MAP_POSY))) {
+                    state = MOVE;
+                    map.DestroyMap(*window, x + delta_x, y + delta_y);
+                    map.LoadMapdata(*window, 1);
+                }
+                else{
+                    missile.update_missile();
+                }
+                unsigned int cnt = 0;
+                while(cnt != TIME_LIMIT) cnt++;
+            }
+
+            if(state == WAIT_POWER){
+                power += power_delta;
+                if(power_delta >= 0) power_bar.inc_val(power_delta);
+                else power_bar.dec_val(-power_delta);
+
+                if(power >= 100) {
+                    power = 100;
+                    power_delta = -power_delta;
+                }
+                else if(power <= 0){
+                    power = 0;
+                    power_delta = -power_delta;
+                }
+            }
+
+            if(state == WAIT_ANGLE){
+                if(player_dir == LEFT){
+                    angle -= angle_delta;
+                    if(angle <= 90) {
+                        angle = 90;
+                        angle_delta = -angle_delta;
+                    }
+                    else if(angle >= 180){
+                        angle = 180;
+                        angle_delta = -angle_delta;
+                    }
+                }
+                else{
+                    angle += angle_delta;
+                    if(angle <= 0) {
+                        angle = 0;
+                        angle_delta = -angle_delta;
+                    }
+                    else if(angle >= 90){
+                        angle = 90;
+                        angle_delta = -angle_delta;
+                    }
+                }
             }
 
             window->clear();
             map.LoadMapdata(*window, 0);
 
+            master_worm->GetPlayerPosition(x, y, dir);
+        
+            master_worm->SetHpBarPos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10);
+            master_worm->DrawHpBar(*window);
+
+            stamina_bar.set_pos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10 - 7);
+            stamina_bar.draw_bar(*window);
+
+            if(state == WAIT_POWER){
+                if(dir==-1)
+                    power_bar.set_pos(x - PLAYER_BASE_POSX - 30, y - PLAYER_BASE_POSY + 40);
+                else
+                    power_bar.set_pos(x - PLAYER_BASE_POSX - 35, y - PLAYER_BASE_POSY + 40);
+                power_bar.draw_bar(*window);
+            }
+
+            if(state == WAIT_ANGLE){
+                if(dir == LEFT)
+                    angle_arrow.set_arrow(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, angle);
+                else
+                    angle_arrow.set_arrow(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, angle);
+                angle_arrow.draw_arrow(*window, sf::Color::White);
+            }
+
+            /*if (event.type == sf::Event::MouseButtonPressed && flag == 0) {
+                window.clear();
+                m.DestroyMap(window, event.mouseButton.x, event.mouseButton.y);
+                m.LoadMapdata(window, 1);
+                flag++;
+            }
+            if (event.type == sf::Event::MouseButtonReleased && flag == 1) {
+                flag--;
+            }*/
+
+            if(state == FIRE) missile.draw_missile(*window);
+
+
+            master_worm->Gravity();
+            master_worm->GetPlayerPosition(x, y, dir);
+            master_worm->GetPlayerMovement(xdelta, ydelta);
+            if (map.CheckCollisionGravity(x, y, xdelta, ydelta)) {
+                master_worm->SetPlayerMovement(xdelta, ydelta - 1);
+                if(state == FALL) state = MOVE;
+            }
+            master_worm->PlayerMove();
+            master_worm->DrawPlayerPosition(*window);
+
             for (int i = 0;i < Nteam * Nworm;i++) {
                 tmp = worms[i];
+                if(tmp == master_worm) continue;
+                
                 tmp->Gravity();
                 tmp->GetPlayerPosition(x, y, dir);
                 tmp->GetPlayerMovement(xdelta, ydelta);
                 if (map.CheckCollisionGravity(x, y, xdelta, ydelta)) tmp->SetPlayerMovement(xdelta, ydelta - 1);
                 tmp->PlayerMove();
+                tmp->SetHpBarPos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10);
+                tmp->DrawHpBar(*window);
                 tmp->DrawPlayerPosition(*window);
             }
 
             window->display();
+            //return;
         }
     }
 }

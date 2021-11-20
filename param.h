@@ -1,3 +1,6 @@
+#ifndef PARAM
+#define PARAM
+
 #define MAX_MAP_POSX    1601
 #define MAX_MAP_POSY    801
 
@@ -14,4 +17,31 @@
 
 #define TIME_LIMIT  10000000
 #define MAX_STAMINA 250
+#define MAX_HP  100
 #define MAX_JUMP_CNT 15
+
+#define MAX_DIST 100
+#define PI 3.1415926535
+#define GRAVITY 74
+
+#define BAR_WIDTH 30
+#define BAR_HEIGHT 5
+#define ARROW_LEN 15
+
+#define POWER_DELTA 1.5
+#define ANGLE_DELTA 1.5
+
+#define LEFT -1
+#define RIGHT 1
+
+enum cur_state{
+    FIRE,
+    MOVE,
+    WAIT_POWER,
+    WAIT_ANGLE,
+    STOP,
+    JUMP,
+    FALL
+};
+
+#endif

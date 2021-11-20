@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "indicator.h"
+#include "param.h"
 
 void Bar:: dec_val(float damage){
     cur_val -= damage;
@@ -28,17 +29,17 @@ void Bar::set_cur_val(float cur_val_){
     cur_val = cur_val_;
 }
 
-void Bar::draw_bar(sf::RenderWindow &window, const sf::Color back_color, const sf::Color front_color){
+void Bar::draw_bar(sf::RenderWindow &window){
     sf::RectangleShape max_bar;
     sf::RectangleShape cur_bar;
 
     max_bar.setPosition(sf::Vector2f(pos_x, pos_y));
     max_bar.setSize(sf::Vector2f(bar_width, bar_height));
-    max_bar.setFillColor(back_color);
+    max_bar.setFillColor(sf::Color::White);
 
     cur_bar.setPosition(sf::Vector2f(pos_x, pos_y));
     cur_bar.setSize(sf::Vector2f(bar_width * (cur_val / max_val), bar_height));
-    cur_bar.setFillColor(front_color);
+    cur_bar.setFillColor(bar_color);
 
     window.draw(max_bar);
     window.draw(cur_bar);
@@ -50,6 +51,10 @@ void Bar::set_pos(float pos_x_, float pos_y_){
 
 void Bar::set_size(float bar_width_, float bar_height_){
     bar_width = bar_width_; bar_height = bar_height_;
+}
+
+void Bar::set_color(sf::Color bar_color_){
+    bar_color = bar_color_;
 }
 
 void Arrow::set_arrow(float pos_x_, float pos_y_, float angle_){
@@ -64,25 +69,11 @@ void Arrow::rotate_arrow(float angle_){
 
 void Arrow::draw_arrow(sf::RenderWindow &window, const sf::Color color){
     sf::RectangleShape bar;
-    sf::RectangleShape bar1;
-    sf::RectangleShape bar2;
 
-    const float PI = 3.1415926535;
-
-    bar.setPosition(sf::Vector2f(pos_x + 15 * cos(((angle) * PI) / 180), pos_y - 15 * sin(((angle) * PI) / 180)));
+    bar.setPosition(sf::Vector2f(pos_x + ARROW_LEN * cos(((angle) * PI) / 180), pos_y - ARROW_LEN * sin(((angle) * PI) / 180)));
     bar.setRotation(-angle);
     bar.setSize(sf::Vector2f(80, 5));
     bar.setFillColor(color);
-
-    /*bar1.setPosition(sf::Vector2f(pos_x + 100 * cos(((angle + 0.5) * PI) / 180), pos_y - 100 * sin(((angle + 0.5) * PI) / 180)));
-    bar1.setRotation(135 - angle);
-    bar1.setSize(sf::Vector2f(30, 5));
-    bar1.setFillColor(sf::Color::Black);
-    
-    bar2.setPosition(sf::Vector2f(pos_x + 100 * cos(((angle + 0.5) * PI) / 180), pos_y - 100 * sin(((angle + 0.5) * PI) / 180)));
-    bar2.setRotation(-(135 + angle));
-    bar2.setSize(sf::Vector2f(30, 5));
-    bar2.setFillColor(sf::Color::Black);*/
 
     window.draw(bar);
 }

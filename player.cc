@@ -1,4 +1,5 @@
 #include "player.h"
+#include "param.h"
 
 void GamePlayer::LoadCharacter() {
     player_alive_image.loadFromFile(PLAYER_FILE_ALIVE);
@@ -41,9 +42,24 @@ void GamePlayer::GetTeamId(int& _team, int& _id) {
     _id = id;
 }
 
+void GamePlayer::SetHpBarColor(sf::Color bar_color){
+    hp_bar.set_color(bar_color);
+    hp_bar.set_cur_val(MAX_HP);
+    hp_bar.set_max_val(MAX_HP);
+    hp_bar.set_size(BAR_WIDTH, BAR_HEIGHT);
+}
+
 bool GamePlayer::IsDeath() {
     if (death) return true;
     else false;
+}
+
+void GamePlayer::SetHpBarPos(float pos_x, float pos_y){
+    hp_bar.set_pos(pos_x, pos_y);
+}
+
+void GamePlayer::DrawHpBar(sf::RenderWindow &window){
+    hp_bar.draw_bar(window);
 }
 
 void GamePlayer::DrawPlayerPosition(sf::RenderWindow &window) {
