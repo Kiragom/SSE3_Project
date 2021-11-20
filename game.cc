@@ -73,7 +73,7 @@ void Game::GameLoop() {
         Missile missile;
         float power_delta = POWER_DELTA, angle_delta = ANGLE_DELTA, power = 0, angle = 0;
         int x, y, prev_x, prev_y, dir, xdelta, ydelta, player_dir = LEFT, jump_cnt = 0;
-        int state = MOVE;
+        int state = FALL;
 
         stamina_bar.set_cur_val(MAX_STAMINA);
         power_bar.set_cur_val(0);
@@ -177,7 +177,7 @@ void Game::GameLoop() {
                 int delta_x, delta_y;
                 missile.get_delta(delta_x, delta_y);
 
-                if (map.CheckCollision(x, y, delta_x, delta_y) || ((x < 0 || x >= MAX_MAP_POSX) && (y <0 || y >= MAX_MAP_POSY))) {
+                if (map.CheckCollision(x, y, delta_x, delta_y) || (y >= MAX_MAP_POSY)) {
                     state = MOVE;
                     map.DestroyMap(*window, x + delta_x, y + delta_y);
                     map.LoadMapdata(*window, 1);
