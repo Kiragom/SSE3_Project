@@ -16,7 +16,7 @@ void Game::StartGame() {
     Nteam = 2;
     Nworm = 1;
 
-    sf::Color color_list[3] = {sf::Color::Red, sf::Color::Blue};
+    sf::Color color_list[4] = {sf::Color::Red, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow};
 
     std::vector<int> team_id_shuffle;
     for (int i = 0;i < Nteam;i++) team_id_shuffle.push_back(i);
@@ -36,7 +36,7 @@ void Game::StartGame() {
             worm->SetPlayerPosition(create_position(g), 50, -1);
             worm->SetPlayerMovement(0, 0);
             worm->LoadCharacter();
-            worm->SetHpBarColor(color_list[j]);
+            worm->SetHpBarColor(color_list[team_id_shuffle[j]]);
             worms.push_back(worm);
         }
     }
@@ -54,7 +54,7 @@ void Game::StartGame() {
     stamina_bar.set_max_val(MAX_STAMINA);
     stamina_bar.set_color(sf::Color::Yellow);
 
-    FLAG_END = 0;
+    FLAG_END = -1;
 }
 
 bool Game::IsOpen() {
@@ -93,54 +93,20 @@ void Game::IsEnd() {
         }
     }
 
-    int cnt = 0;
+    int cnt = 0, winner_team;
     for (int i = 0;i < Nteam;i++) {
         if (alive_team[i]) {
             cnt++;
-            //team = i;
+            winner_team = i;
         }
     }
 
-    if (cnt == 1) FLAG_END = 1;
+    if (cnt == 1) FLAG_END = winner_team;
 }
 
 void Game::GameLoop() {
-    if (FLAG_END) {
-        while(window->isOpen()) {
-            sf::Event event;
-            while (window->pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window->close();
-
-                if (event.type == sf::Event::KeyPressed){
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                        window->close();
-                    }
-                }
-            }
-            window->clear();
-            sf::Text text;
-            sf::Font font;
-            sf::Vector2f pos;
-            font.loadFromFile("example_font.ttf");
-            // select the font
-            text.setFont(font); // font is a sf::Font
-            text.setPosition(630, 330);
-            // set the string to display
-            text.setString("Game Over");
-
-            // set the character size
-            text.setCharacterSize(70); // in pixels, not points!
-
-            // set the color
-            text.setFillColor(sf::Color::Red);
-
-            // set the text style
-            text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-            window->draw(text);
-            window->display();
-        }
+    if (FLAG_END != -1) {
+        EndGame();
     }
 
     else {
@@ -374,5 +340,62 @@ void Game::GameLoop() {
         worms.erase(worms.begin());
         worms.push_back(master_worm);
         IsEnd();
+    }
+}
+
+void Game::EndGame() {
+    sf::Text text, winner;
+    sf::Font font;
+    sf::Vector2f pos;
+
+    font.loadFromFile(FONT_FILE); // select the font
+    text.setFont(font); // font is a sf::Font
+    text.setPosition(630, 210); // set the string to display
+    text.setString("Game Over");
+    text.setCharacterSize(70); // in pixels, not points!
+    text.setFillColor(sf::Color::White);
+    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+    winner.setFont(font);
+    winner.setPosition(390, 400);
+    switch(FLAG_END) {
+        case 0: {
+            winner.setString("Red Team Win!");
+            winner.setFillColor(sf::Color::Red);
+        } break;
+        case 1: {
+            winner.setString("Blue Team Win!");
+            winner.setFillColor(sf::Color::Blue);
+        } break;
+        case 2: {
+            winner.setString("Green Team Win!");
+            winner.setFillColor(sf::Color::Green);
+        } breasize3: {
+            winner.setString("Yellow Team Win!");
+            winner.setFillColor(sf::Color::Yellow);
+        }
+    }
+    winner.setCharacterSize(120);
+    winner.setStyle(sf::Text::Bold);
+
+    while(window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window->close();
+
+            if (event.type == sf::Event::KeyPressed){
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    window->close();
+                }
+            }
+        }
+
+        window->clear();  
+        window->draw(text);
+        window->draw(winner);
+
+        window->display();
     }
 }
