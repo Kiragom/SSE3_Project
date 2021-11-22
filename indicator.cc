@@ -77,3 +77,35 @@ void Arrow::draw_arrow(sf::RenderWindow &window, const sf::Color color){
 
     window.draw(bar);
 }
+
+void SetAim(int _posx, int _posy);
+    void GetAim(int &_posx, int &_posy);
+    void DrawAim(sf::RenderWindow &window);
+
+void Aim::SetAim(int _posx, int _posy) {
+    posx = _posx;
+    posy = _posy;
+}
+
+void Aim::GetAim(int &_posx, int &_posy) {
+    _posx = posx;
+    _posy = posy;
+}
+
+void Aim::DrawAim(sf::RenderWindow &window) {
+    sf::RectangleShape line1, line2;
+    sf::CircleShape circle(2);
+
+    line1.setPosition(posx - 6, posy);
+    line1.setSize(sf::Vector2f(13, 1));
+    line1.setFillColor(sf::Color::Black);
+    line2.setPosition(posx, posy - 6);
+    line2.setSize(sf::Vector2f(1, 13));
+    line2.setFillColor(sf::Color::Black);
+    circle.setPosition(posx - 2, posy - 2);
+    circle.setFillColor(sf::Color::Black);
+
+    window.draw(line1);
+    window.draw(line2);
+    window.draw(circle);
+}

@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "param.h"
 #include "indicator.h"
+#include "weapon.h"
 
 #ifndef PLAYER
 #define PLAYER
@@ -12,6 +14,7 @@ class GamePlayer {
     sf::Sprite character_alive;
     sf::Sprite character_death;
     Bar hp_bar;
+    std::vector<GameWeapon> weapon_list;
 
     int posx;
     int posy;

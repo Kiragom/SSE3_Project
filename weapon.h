@@ -7,7 +7,8 @@ class GameWeapon {
     protected:
     int id;
     int type;
-    int range;
+    int valid_range;
+    int destroy_range;
     float damage;
     float posx;
     float posy;
@@ -20,9 +21,12 @@ class GameWeapon {
 
     public:
     virtual void UpdateMovement() = 0;
-    void SetWeapon(float _posx, float _posy, float _power, float _angle, int _type);
+    virtual void SetMovement() = 0;
+    void SetWeapon(float _posx, float _posy, float _power, float _angle, int _type, int _vrange, int _drange);
     void SetDamage(float _damage);
     float GetDamage();
+    int GetValidRange();
+    int GetDestroyRange();
     void GetDelta(int &delta_x, int &delta_y);
     int GetPosX();
     int GetPosY();

@@ -9,6 +9,7 @@
 #include "map.h"
 #include "weapon.h"
 #include "missile.h"
+#include "sniper.h"
 #include "player.h"
 
 class Game {
@@ -25,7 +26,9 @@ class Game {
     Bar power_bar;
     Bar stamina_bar;
     Missile missile;
+    Sniper sniper;
     Arrow angle_arrow;
+    Aim aim;
     int FLAG_END;
 
     public:

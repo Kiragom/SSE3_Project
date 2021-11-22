@@ -30,4 +30,14 @@ class Arrow{
         float pos_x, pos_y, angle;
 };
 
+class Aim {
+    public:
+    void SetAim(int _posx, int _posy);
+    void GetAim(int &_posx, int &_posy);
+    void DrawAim(sf::RenderWindow &window);
+
+    private:
+    int posx, posy;
+};
+
 #endif

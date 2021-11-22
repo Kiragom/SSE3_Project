@@ -9,12 +9,15 @@
 #define PLAYER_FILE_ALIVE       "player_character_alive.png"
 #define PLAYER_FILE_DEATH       "player_character_death.png"
 #define FONT_FILE               "example_font.ttf"
+#define WEAPON_SNIPER_FILE      "weapon_sniper_meteor.png"
 
 #define PLAYER_BASE_POSX        11
 #define PLAYER_BASE_POSY        30
 #define PLAYER_BASE_DIR         23
 #define PLAYER_X_BOUND          15
 #define PLAYER_Y_BOUND          35
+#define SNIPER_X_TRANS          129
+#define SNIPER_Y_TRANS          200
 
 #define TIME_LIMIT  15000000
 #define MAX_STAMINA 250
@@ -26,7 +29,7 @@
 #define PI 3.1415926535
 #define GRAVITY 74
 #define MISSILE_DAMAGE 25
-#define MIN_DAMAGE 100
+#define MIN_DAMAGE 50
 
 #define BAR_WIDTH 30
 #define BAR_HEIGHT 5
@@ -43,6 +46,7 @@ enum cur_state{
     MOVE,
     WAIT_POWER,
     WAIT_ANGLE,
+    WAIT_POINT,
     STOP,
     JUMP,
     FALL

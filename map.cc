@@ -56,28 +56,28 @@ void GameMap::LoadMapdata(sf::RenderWindow &window, int DELETE) {
     }
 }
 
-void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy) {
+void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy, int drange) {
     int distance;
-    for (int x = posx - 40;x <= posx + 40;x++) {
-        for (int y = posy - 40;y <= posy + 40;y++) {
+    for (int x = posx - drange;x <= posx + drange;x++) {
+        for (int y = posy - drange;y <= posy + drange;y++) {
             if (x < 0 || x > MAX_MAP_POSX) continue;
             if (y < 0 || y > MAX_MAP_POSY) continue;
             if (!mapdata[x][y]) continue;
 
             distance = (x - posx)*(x - posx) + (y - posy)*(y - posy);
-            if (distance <= 1600) {
+            if (distance <= drange*drange) {
                 mapdata[x][y] = 0;
             }
         }
     }
 
-    sf::CircleShape c(40);
+    sf::CircleShape c(drange);
     c.setFillColor(sf::Color::Transparent);
-    c.setPosition(posx-40, posy-40);
+    c.setPosition(posx-drange, posy-drange);
     screen.draw(c, sf::BlendNone);
 }
 
-bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
+bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta, int vrange) {
     bool collision = false, out_of_map = false;
     int startx = x, starty = y;
     int endx = x + xdelta, endy = y + ydelta;
@@ -96,8 +96,8 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta) {
             else startx += unitx;
         }
 
-        for (int x = startx-5;x < startx+5;x++) {
-            for (int y = starty-5;y < starty+5;y++) {
+        for (int x = startx-vrange;x < startx+vrange;x++) {
+            for (int y = starty-vrange;y < starty+vrange;y++) {
                 if(x < 0 || x >= MAX_MAP_POSX || y < 0 || y > MAX_MAP_POSY) continue;
                 if (mapdata[x][y]) {
                     collision = true;

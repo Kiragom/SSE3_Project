@@ -1,16 +1,15 @@
-#include <cmath>
 #include "weapon.h"
+#include <cmath>
 #include "param.h"
 
-void GameWeapon::SetWeapon(float _posx, float _posy, float _power, float _angle, int _type) {
+void GameWeapon::SetWeapon(float _posx, float _posy, float _power, float _angle, int _type, int _vrange, int _drange) {
     posx = _posx;
     posy = _posy;
     power = _power;
     angle = _angle;
     type = _type;
-
-    movex = MAX_DIST * (power / 100) * cos((angle * PI) / 180);
-    movey = MAX_DIST * (power / 100) * sin((angle * PI) / 180);
+    valid_range = _vrange;
+    destroy_range = _drange;
 }
 
 void GameWeapon::SetDamage(float _damage) {
@@ -19,6 +18,14 @@ void GameWeapon::SetDamage(float _damage) {
 
 float GameWeapon::GetDamage() {
     return damage;
+}
+
+int GameWeapon::GetValidRange() {
+    return valid_range;
+}
+
+int GameWeapon::GetDestroyRange() {
+    return destroy_range;
 }
 
 void GameWeapon::GetDelta(int &delta_x, int &delta_y) {

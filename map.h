@@ -19,8 +19,8 @@ class GameMap {
     void LoadBackgorund(sf::RenderWindow &window);
     void SetMapdata(sf::RenderWindow &window);
     void LoadMapdata(sf::RenderWindow &window, int aaaa);
-    void DestroyMap(sf::RenderWindow &window, int x, int y);
-    bool CheckCollision(int& x, int& y, int& xdelta, int& ydelta);
+    void DestroyMap(sf::RenderWindow &window, int x, int y, int drange);
+    bool CheckCollision(int& x, int& y, int& xdelta, int& ydelta, int vrange);
     bool CheckCollisionGravity(int& x, int& y, int &xdelta, int &ydelta);
     void CheckGradient(int &x, int &y, int& xdelta, int& ydelta);
 
