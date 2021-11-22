@@ -19,6 +19,7 @@
 #define MAX_STAMINA 250
 #define MAX_HP  100
 #define MAX_JUMP_CNT 15
+#define TURN_LIMIT 20
 
 #define MAX_DIST 100
 #define PI 3.1415926535

@@ -1,6 +1,7 @@
 #include "game.h"
 #include "param.h"
 #include "player.h"
+#include <string>
 
 Game::Game(int _xlength, int _ylength) {
     xlength = _xlength;
@@ -123,8 +124,8 @@ void Game::GameLoop() {
             sf::Text text;
             sf::Font font;
             sf::Vector2f pos;
-            font.loadFromFile("example_font.ttf");
             // select the font
+            font.loadFromFile("example_font.ttf");
             text.setFont(font); // font is a sf::Font
             text.setPosition(630, 330);
             // set the string to display
@@ -148,8 +149,12 @@ void Game::GameLoop() {
         GamePlayer *tmp;
         Missile missile;
         float power_delta = POWER_DELTA, angle_delta = ANGLE_DELTA, power = 0, angle = 0;
+        float turn_timer = 0;
+        sf::Clock clock;
+
         int x, y, prev_x, prev_y, dir, xdelta, ydelta, player_dir = LEFT, jump_cnt = 0;
         int state = FALL;
+        bool initial_fall = true;
 
         stamina_bar.set_cur_val(MAX_STAMINA);
         power_bar.set_cur_val(0);
@@ -163,20 +168,31 @@ void Game::GameLoop() {
 
         while(window->isOpen()) {
             sf::Event event;
+
+            float time = clock.getElapsedTime().asSeconds();
+            clock.restart();
+
+            turn_timer += time;
+
+            if((!initial_fall) && (turn_timer >= TURN_LIMIT)) break;
+            if(master_worm->IsDeath()) break;
+
             while (window->pollEvent(event))
             {
-                if (event.type == sf::Event::Closed)
+                if (event.type == sf::Event::Closed){
                     window->close();
+                }
 
                 if (event.type == sf::Event::KeyPressed){
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                         master_worm->GetPlayerPosition(x, y, dir);
                         if(state == WAIT_ANGLE){
-                            if(dir==-1)
+                            if(dir==LEFT)
                                 missile.set_missile(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
                             else
                                 missile.set_missile(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, Arc);
                             state = FIRE;
+                            break;
                         }
                     }
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
@@ -184,6 +200,7 @@ void Game::GameLoop() {
                             state = WAIT_POWER;
                             power_bar.set_cur_val(0);
                             power = 0;
+                            break;
                         }
                         else if(state == WAIT_POWER) {
                             master_worm->GetPlayerPosition(x, y, dir);
@@ -197,11 +214,16 @@ void Game::GameLoop() {
                                 player_dir = RIGHT;
                                 angle = 0;
                             }
+
+                            break;
                         }
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                        window->close();
                     }
                 }
             }
-            if(master_worm->IsDeath()) break;
+
             master_worm->GetPlayerPosition(x, y, dir);
             prev_x = x; prev_y = y;
 
@@ -314,9 +336,30 @@ void Game::GameLoop() {
 
             window->clear();
             map.LoadMapdata(*window, 0);
-
             master_worm->GetPlayerPosition(x, y, dir);
-        
+            sf::Text text;
+            sf::Font font;
+            sf::Vector2f pos;
+            std::string remain_time = std::to_string((TURN_LIMIT - (int)turn_timer));
+
+            // select the font
+            font.loadFromFile("example_font.ttf");
+            text.setFont(font); // font is a sf::Font
+            text.setPosition(x - PLAYER_BASE_POSX, y);
+            // set the string to display
+            text.setString(remain_time);
+
+            // set the character size
+            text.setCharacterSize(30); // in pixels, not points!
+
+            // set the color
+            text.setFillColor(sf::Color::Black);
+
+            // set the text style
+            text.setStyle(sf::Text::Bold);
+            if(!initial_fall) window->draw(text);
+
+    
             master_worm->SetHpBarPos(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY - 10);
             master_worm->DrawHpBar(*window);
 
@@ -324,7 +367,7 @@ void Game::GameLoop() {
             stamina_bar.draw_bar(*window);
 
             if(state == WAIT_POWER){
-                if(dir==-1)
+                if(dir == LEFT)
                     power_bar.set_pos(x - PLAYER_BASE_POSX - 30, y - PLAYER_BASE_POSY + 40);
                 else
                     power_bar.set_pos(x - PLAYER_BASE_POSX - 35, y - PLAYER_BASE_POSY + 40);
@@ -348,6 +391,10 @@ void Game::GameLoop() {
             if (map.CheckCollisionGravity(x, y, xdelta, ydelta)) {
                 master_worm->SetPlayerMovement(xdelta, ydelta - 1);
                 if(state == FALL) state = MOVE;
+                if(initial_fall){
+                    initial_fall = false;
+                    turn_timer = 0;
+                }
             }
             master_worm->PlayerMove();
             master_worm->DrawPlayerPosition(*window);
