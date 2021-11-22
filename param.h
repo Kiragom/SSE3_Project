@@ -10,6 +10,7 @@
 #define PLAYER_FILE_DEATH       "player_character_death.png"
 #define FONT_FILE               "example_font.ttf"
 #define WEAPON_SNIPER_FILE      "weapon_sniper_meteor.png"
+#define WATER_FILE              "water_pic.jpg"
 
 #define PLAYER_BASE_POSX        11
 #define PLAYER_BASE_POSY        30

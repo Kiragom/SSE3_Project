@@ -77,6 +77,25 @@ void GameMap::DestroyMap(sf::RenderWindow &window, int posx, int posy, int drang
     screen.draw(c, sf::BlendNone);
 }
 
+void GameMap::InitWater(){
+    water_image.loadFromFile(WATER_FILE);
+    water.setTexture(&water_image);
+}
+
+void GameMap::FillWater(sf::RenderWindow &window){
+    water.setPosition(sf::Vector2f(0, MAX_MAP_POSY - water_height));
+    water.setSize(sf::Vector2f(MAX_MAP_POSX, water_height));
+    window.draw(water);
+}
+
+void GameMap::IncWaterHeight(void){
+    water_height += 10;
+}
+
+int GameMap::GetWaterHeight(void){
+    return water_height;
+}
+
 bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta, int vrange) {
     bool collision = false, out_of_map = false;
     int startx = x, starty = y;

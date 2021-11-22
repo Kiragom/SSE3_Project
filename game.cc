@@ -42,6 +42,7 @@ void Game::StartGame() {
 
     map.LoadBackgorund(*window);
     map.SetMapdata(*window);
+    map.InitWater();
 
     power_bar.set_size(100, 15);
     power_bar.set_cur_val(0);
@@ -75,7 +76,7 @@ void Game::DamagePlayers(int pos_x, int pos_y, float damage, GamePlayer* cur_wor
 
         worms[i]->GetPlayerPosition(player_x, player_y, player_dir);
         int dis = (pos_x - player_x) * (pos_x - player_x) + (pos_y - player_y) * (pos_y - player_y);
-        if(dis <= 14400){
+        if(dis <= 14400){ //////////////////////////////////
             float total_damage = MIN_DAMAGE + (((float)dis / 14400) * damage);
             printf("total damage : %lf\n", total_damage);
             worms[i]->GetDamage(total_damage);
@@ -114,14 +115,28 @@ void Game::GameLoop() {
         GamePlayer *master_worm = worms.at(0);
         GamePlayer *tmp;
         Missile missile;
+        int x, y, prev_x, prev_y, dir, xdelta, ydelta, player_dir = LEFT, jump_cnt = 0;
+        int state = FALL;
+        bool initial_fall = true;
         float power_delta = POWER_DELTA, angle_delta = ANGLE_DELTA, power = 0, angle = 0;
         float turn_timer = 0;
         sf::Clock clock;
 
-        int x, y, prev_x, prev_y, dir, xdelta, ydelta, player_dir = LEFT, jump_cnt = 0;
-        int state = FALL;
-        bool initial_fall = true;
-
+        if(turn_cnt > Nworm * 3){
+            map.IncWaterHeight();
+            for(int i=0; i<Nteam * Nworm; i++){
+                tmp = worms[i];
+                int x, y, dir;
+                tmp->GetPlayerPosition(x, y, dir);
+                if(y > MAX_MAP_POSY - map.GetWaterHeight())
+                    tmp->GetDamage(MAX_HP);
+            }
+            IsEnd();
+            if (FLAG_END != -1) {
+                EndGame();
+            }
+        }
+        
         stamina_bar.set_cur_val(MAX_STAMINA);
         power_bar.set_cur_val(0);
         missile.SetDamage(MISSILE_DAMAGE);
@@ -139,7 +154,7 @@ void Game::GameLoop() {
             float time = clock.getElapsedTime().asSeconds();
             clock.restart();
 
-            turn_timer += time;
+            if(state != FIRE) turn_timer += time;
 
             if((!initial_fall) && (turn_timer >= TURN_LIMIT)) break;
             if(master_worm->IsDeath()) break;
@@ -347,6 +362,7 @@ void Game::GameLoop() {
 
             window->clear();
             map.LoadMapdata(*window, 0);
+            map.FillWater(*window);
             master_worm->GetPlayerPosition(x, y, dir);
             sf::Text text;
             sf::Font font;
@@ -431,6 +447,7 @@ void Game::GameLoop() {
             window->display();
         }
 
+        turn_cnt++;
         worms.erase(worms.begin());
         worms.push_back(master_worm);
         IsEnd();
