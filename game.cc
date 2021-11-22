@@ -1,7 +1,5 @@
 #include "game.h"
 #include "param.h"
-#include "player.h"
-#include <string>
 
 Game::Game(int _xlength, int _ylength) {
     xlength = _xlength;
@@ -124,7 +122,7 @@ void Game::GameLoop() {
 
         stamina_bar.set_cur_val(MAX_STAMINA);
         power_bar.set_cur_val(0);
-        missile.set_damage(MISSILE_DAMAGE);
+        missile.SetDamage(MISSILE_DAMAGE);
 
         if(master_worm->IsDeath()){
             worms.erase(worms.begin());
@@ -154,9 +152,9 @@ void Game::GameLoop() {
                         master_worm->GetPlayerPosition(x, y, dir);
                         if(state == WAIT_ANGLE){
                             if(dir==LEFT)
-                                missile.set_missile(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
+                                missile.SetWeapon(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, Arc);
                             else
-                                missile.set_missile(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, Arc);
+                                missile.SetWeapon(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, Arc);
                             state = FIRE;
                             break;
                         }
@@ -242,19 +240,19 @@ void Game::GameLoop() {
             }
 
             if(state == FIRE){
-                x = missile.get_pos_x();
-                y = missile.get_pos_y();
+                x = missile.GetPosX();
+                y = missile.GetPosY();
                 int delta_x, delta_y;
-                missile.get_delta(delta_x, delta_y);
+                missile.GetDelta(delta_x, delta_y);
 
                 if (map.CheckCollision(x, y, delta_x, delta_y) || (y >= MAX_MAP_POSY)) {
                     map.DestroyMap(*window, x + delta_x, y + delta_y);
                     map.LoadMapdata(*window, 1);
-                    DamagePlayers(x + delta_x, y + delta_y, missile.get_damage(), master_worm);
+                    DamagePlayers(x + delta_x, y + delta_y, missile.GetDamage(), master_worm);
                     break;
                 }
                 else{
-                    missile.update_missile();
+                    missile.UpdateMovement();
                 }
                 unsigned int cnt = 0;
                 while(cnt != TIME_LIMIT) cnt++;
@@ -348,7 +346,7 @@ void Game::GameLoop() {
                 angle_arrow.draw_arrow(*window, sf::Color::White);
             }
 
-            if(state == FIRE) missile.draw_missile(*window);
+            if(state == FIRE) missile.DrawWeaponMovement(*window);
 
 
             master_worm->Gravity();

@@ -1,14 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 #include <vector>
 #include <random>
 #include <algorithm>
 #include "indicator.h"
 #include "key_control.h"
 #include "map.h"
+#include "weapon.h"
 #include "missile.h"
 #include "player.h"
-#include "param.h"
 
 class Game {
     private:

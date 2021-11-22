@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+/*#include <SFML/Graphics.hpp>
 #include "key_control.h"
 #include "missile.h"
 #include "indicator.h"
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-/*int main()
+int main()
 {
     sf::RenderWindow window(sf::VideoMode(1600, 800), "SFML works!");
     int flag = 0, other = 0, state = MOVE, jump_cnt = 0;

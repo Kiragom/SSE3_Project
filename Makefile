@@ -1,6 +1,6 @@
 CC = g++
 TARGET = sfml
-OBJS = main.o map.o player.o key_control.o missile.o indicator.o game.o
+OBJS = main.o map.o player.o key_control.o weapon.o missile.o indicator.o game.o
 
 $(TARGET) : $(OBJS)
 	$(CC) -o $@ $^ -lsfml-graphics -lsfml-window -lsfml-system
@@ -18,6 +18,9 @@ player.o : player.cc
 	$(CC) -c $<
 
 key_control.o : key_control.cc
+	$(CC) -c $<
+
+weapon.o : weapon.cc
 	$(CC) -c $<
 
 missile.o : missile.cc
