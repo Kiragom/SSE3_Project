@@ -183,7 +183,7 @@ void GameMap::CheckGradient(int& x, int& y, int& xdelta, int& ydelta) {
         check = -1;
 
         while(cnt < 2) {
-            if (mapdata[startx][endy - cnt] == 0) {
+            if (mapdata[startx][endy - cnt] == 0 && mapdata[startx][endy - PLAYER_Y_BOUND - cnt] == 0) {
                 check = cnt;
                 break;
             }

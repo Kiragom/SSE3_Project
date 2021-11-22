@@ -3,7 +3,7 @@
 
 void Sniper::SetMovement() {
     movex = 0;
-    movey = 8;
+    movey = 100;
 }
 
 void Sniper::UpdateMovement() {
