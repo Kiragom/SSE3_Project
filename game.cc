@@ -206,7 +206,7 @@ void Game::GameLoop() {
                         }
                     }
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                        if(state == MOVE || state == STOP) {
+                        if(state == MOVE || state == STOP || state == JUMP || state == FALL) {
                             if (master_worm->IsSpecial()) weapon_select = (weapon_select + 1) % 2;
                             ICON_ON = true;
                             icon_timer = 0;

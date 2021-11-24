@@ -23,8 +23,8 @@
 #define SNIPER_Y_TRANS          200
 
 #define NTEAM 2
-#define NWORM 1
-#define TIME_LIMIT  15000000
+#define NWORM 3
+#define TIME_LIMIT  20000000
 #define MAX_STAMINA 200
 #define MAX_HP  100
 #define MAX_JUMP_CNT 15
@@ -34,8 +34,8 @@
 #define PI 3.1415926535
 #define GRAVITY 74
 #define MISSILE_DAMAGE  20
-#define SNIPER_DAMAGE   30
-#define MIN_DAMAGE 10
+#define SNIPER_DAMAGE   60
+#define MIN_DAMAGE 20
 
 #define BAR_WIDTH 30
 #define BAR_HEIGHT 5
