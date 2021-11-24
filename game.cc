@@ -63,6 +63,7 @@ void Game::StartGame() {
 
     sniper.SetObject();
     sniper.SetWeaponIcon();
+    missile.SetWeaponIcon();
 
     FLAG_END = NOT_END;
 }
@@ -137,7 +138,6 @@ void Game::GameLoop() {
     else {
         GamePlayer *master_worm = worms.at(0);
         GamePlayer *tmp;
-        Missile missile;
         int x, y, prev_x, prev_y, dir, xdelta, ydelta, player_dir = LEFT, jump_cnt = 0;
         int state = FALL;
         bool initial_fall = true;
