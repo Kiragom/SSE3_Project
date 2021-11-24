@@ -5,7 +5,6 @@
 #include <random>
 #include <algorithm>
 #include "indicator.h"
-#include "key_control.h"
 #include "map.h"
 #include "weapon.h"
 #include "missile.h"

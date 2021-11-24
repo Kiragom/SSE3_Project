@@ -23,7 +23,7 @@
 #define NTEAM 2
 #define NWORM 1
 #define TIME_LIMIT  15000000
-#define MAX_STAMINA 250
+#define MAX_STAMINA 200
 #define MAX_HP  100
 #define MAX_JUMP_CNT 15
 #define TURN_LIMIT 20

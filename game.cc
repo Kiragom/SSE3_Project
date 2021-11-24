@@ -39,7 +39,7 @@ void Game::StartGame() {
         for (int j = 0;j < Nteam;j++) {
             GamePlayer *worm = new GamePlayer;
             worm->SetTeamId(team_id_shuffle[j], worm_id_shuffle[i]);
-            worm->SetPlayerPosition(create_position(g), 50, -1);
+            worm->SetPlayerPosition(create_position(g), 50, LEFT);
             worm->SetPlayerMovement(0, 0);
             worm->LoadCharacter();
             worm->SetHpBarColor(color_list[team_id_shuffle[j]]);
@@ -123,7 +123,7 @@ void Game::CheckWaterDeath(){
             tmp->GetDamage(MAX_HP);
     }
     IsEnd();
-    if (FLAG_END != -1) {
+    if (FLAG_END != NOT_END) {
         EndGame();
     }
 }
@@ -498,7 +498,7 @@ void Game::EndGame() {
         case YELLOW_WIN: {
             winner.setString("Yellow Team Win!");
             winner.setFillColor(sf::Color::Yellow);
-        }
+        } break;
         case DRAW: {
             winner.setPosition(660, 400);
             winner.setString("Draw!");
