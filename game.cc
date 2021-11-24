@@ -366,7 +366,6 @@ void Game::GameLoop() {
 
             window->clear();
             map.LoadMapdata(*window, 0);
-            map.FillWater(*window);
             master_worm->GetPlayerPosition(x, y, dir);
             sf::Text text;
             sf::Font font;
@@ -417,6 +416,8 @@ void Game::GameLoop() {
 
             //if(state == FIRE) missile.DrawWeaponMovement(*window);
             if(state == FIRE) sniper.DrawWeaponMovement(*window);
+
+            map.FillWater(*window);
 
             master_worm->Gravity();
             master_worm->GetPlayerPosition(x, y, dir);

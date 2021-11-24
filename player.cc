@@ -10,6 +10,10 @@ void GamePlayer::LoadCharacter() {
     character_death.setScale(0.04, 0.04);
 }
 
+void GamePlayer::PushWeapon() {
+    Missile missile;
+}
+
 void GamePlayer::SetPlayerPosition(int x, int y, int dir) {
     posx = x;
     posy = y;
