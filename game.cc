@@ -106,6 +106,20 @@ void Game::IsEnd() {
     if (cnt == 1) FLAG_END = winner_team;
 }
 
+void Game::CheckWaterDeath(){
+    for(int i=0; i<Nteam * Nworm; i++){
+        GamePlayer * tmp = worms[i];
+        int x, y, dir;
+        tmp->GetPlayerPosition(x, y, dir);
+        if(y > MAX_MAP_POSY - map.GetWaterHeight())
+            tmp->GetDamage(MAX_HP);
+    }
+    IsEnd();
+    if (FLAG_END != -1) {
+        EndGame();
+    }
+}
+
 void Game::GameLoop() {
     if (FLAG_END != -1) {
         EndGame();
@@ -124,17 +138,7 @@ void Game::GameLoop() {
 
         if(turn_cnt > Nworm * 3){
             map.IncWaterHeight();
-            for(int i=0; i<Nteam * Nworm; i++){
-                tmp = worms[i];
-                int x, y, dir;
-                tmp->GetPlayerPosition(x, y, dir);
-                if(y > MAX_MAP_POSY - map.GetWaterHeight())
-                    tmp->GetDamage(MAX_HP);
-            }
-            IsEnd();
-            if (FLAG_END != -1) {
-                EndGame();
-            }
+            CheckWaterDeath();
         }
         
         stamina_bar.set_cur_val(MAX_STAMINA);
@@ -227,7 +231,7 @@ void Game::GameLoop() {
             prev_x = x; prev_y = y;
 
             if(stamina_bar.get_cur_val() == 0){
-                if(state == MOVE){
+                if(state == MOVE || state == FALL){
                     state = STOP;
                 }
 
@@ -444,6 +448,7 @@ void Game::GameLoop() {
                 }
             }
 
+            CheckWaterDeath();
             window->display();
         }
 
