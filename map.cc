@@ -124,6 +124,7 @@ bool GameMap::CheckCollision(int& x, int& y, int &xdelta, int &ydelta, int vrang
                     break;
                 }
             }
+            if (collision) break;
         }
         if (collision) break;
     }

@@ -308,7 +308,6 @@ void Game::GameLoop() {
                     y = missile.GetPosY();
                     int delta_x, delta_y;
                     missile.GetDelta(delta_x, delta_y);
-                    delta_y *= -1;
 
                     if (map.CheckCollision(x, y, delta_x, delta_y, missile.GetValidRange()) || (y >= MAX_MAP_POSY)) {
                         map.DestroyMap(*window, x + delta_x, y + delta_y, missile.GetDestroyRange());
@@ -323,8 +322,7 @@ void Game::GameLoop() {
                     x = sniper.GetPosX();
                     y = sniper.GetPosY(); y += SNIPER_Y_TRANS;
                     int delta_x, delta_y;
-                    sniper.GetDelta(delta_x, delta_y);
-                    delta_y *= -1;
+                    sniper.GetDelta(delta_x, delta_y); delta_y *= -1;
 
                     if (map.CheckCollision(x, y, delta_x, delta_y, sniper.GetValidRange()) || (y >= MAX_MAP_POSY)) {
                         map.DestroyMap(*window, x + delta_x, y + delta_y, sniper.GetDestroyRange());
