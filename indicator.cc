@@ -57,14 +57,20 @@ void Bar::set_color(sf::Color bar_color_){
     bar_color = bar_color_;
 }
 
-void Arrow::set_arrow(float pos_x_, float pos_y_, float angle_){
-    pos_x = pos_x_; pos_y = pos_y_; angle = angle_;
+Bar& Bar::operator+=(float rhs){
+    if(rhs >= 0) inc_val(rhs);
+    else dec_val(-rhs);
+    
+    return (*this);
 }
 
-void Arrow::rotate_arrow(float angle_){
-    angle += angle_;
-    if(angle > 180) angle = 180;
-    if(angle < 0) angle = 0;
+Bar& Bar::operator--(int){
+    dec_val(1);
+    return (*this);
+}
+
+void Arrow::set_arrow(float pos_x_, float pos_y_, float angle_){
+    pos_x = pos_x_; pos_y = pos_y_; angle = angle_;
 }
 
 void Arrow::draw_arrow(sf::RenderWindow &window, const sf::Color color){

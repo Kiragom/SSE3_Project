@@ -1,4 +1,5 @@
 #include "map.h"
+#include "param.h"
 #include <cstdlib>
 #include <fstream>
 
@@ -89,7 +90,7 @@ void GameMap::FillWater(sf::RenderWindow &window){
 }
 
 void GameMap::IncWaterHeight(void){
-    water_height += 10;
+    water_height += WATER_INC;
 }
 
 int GameMap::GetWaterHeight(void){

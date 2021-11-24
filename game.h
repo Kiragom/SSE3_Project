@@ -34,6 +34,7 @@ class Game {
 
     public:
     Game(int _xlength, int _ylength);
+    ~Game();
     bool IsOpen();
     void Display();
     void StartGame();
