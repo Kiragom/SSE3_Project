@@ -23,6 +23,7 @@ class GamePlayer {
     int id;
     int death = 0;
     int direction;
+    bool special = true;
 
     public:
     void LoadCharacter();
@@ -40,6 +41,8 @@ class GamePlayer {
     void MoveRight();
     void MoveLeft();
     void MoveJump();
+    void UseSpecial();
+    bool IsSpecial();
     int Gravity();
     void DrawHpBar(sf::RenderWindow &window);
     void DrawPlayerPosition(sf::RenderWindow &window);

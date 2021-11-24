@@ -64,6 +64,8 @@ void Game::StartGame() {
     sniper.SetObject();
     sniper.SetWeaponIcon();
     missile.SetWeaponIcon();
+    missile.SetDamage(MISSILE_DAMAGE);
+    sniper.SetDamage(SNIPER_DAMAGE);
 
     FLAG_END = NOT_END;
 }
@@ -85,9 +87,13 @@ void Game::DamagePlayers(int pos_x, int pos_y, float damage, GamePlayer* cur_wor
 
         worms[i]->GetPlayerPosition(player_x, player_y, player_dir);
         int dis = (pos_x - player_x) * (pos_x - player_x) + (pos_y - player_y) * (pos_y - player_y);
-        if(dis <= 14400){ //////////////////////////////////
-            float total_damage = MIN_DAMAGE + (((float)dis / 14400) * damage);
-            printf("total damage : %lf\n", total_damage);
+        int destroy_range;
+        if (weapon_select == 0) destroy_range = missile.GetDestroyRange();
+        else destroy_range = sniper.GetDestroyRange();
+
+        float destroy_area = (float)destroy_range * (float)destroy_range;
+        if(dis <= (int)destroy_area){ 
+            float total_damage = MIN_DAMAGE + (((float)dis / destroy_area) * damage);
             worms[i]->GetDamage(total_damage);
         }
     }
@@ -153,8 +159,6 @@ void Game::GameLoop() {
         
         stamina_bar.set_cur_val(MAX_STAMINA);
         power_bar.set_cur_val(0);
-        missile.SetDamage(MISSILE_DAMAGE);
-        sniper.SetDamage(MISSILE_DAMAGE);
         weapon_select = 0;
 
         if(master_worm->IsDeath()){
@@ -184,44 +188,45 @@ void Game::GameLoop() {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
                         master_worm->GetPlayerPosition(x, y, dir);
                         if(state == WAIT_ANGLE){
-                            if(dir==LEFT) sniper.SetWeapon(x - PLAYER_BASE_POSX, -500, power, angle, 0, 40, 120);
-                                //missile.SetWeapon(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, 0);
-                            else sniper.SetWeapon(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, -500, power, angle, 0, 40, 120);
-                                //missile.SetWeapon(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, 0);
-                            sniper.SetMovement();
-                            //missile.SetMovement();
+                            if(dir==LEFT) missile.SetWeapon(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, 0, 5, 40);
+                            else missile.SetWeapon(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, 0, 5, 40);
+                            missile.SetMovement();
                             state = FIRE;
                             break;
                         }
                         else if (state == WAIT_POINT) {
                             int aim_x, aim_y;
                             aim.GetAim(aim_x, aim_y);
-                            if(dir==LEFT) sniper.SetWeapon(aim_x - PLAYER_BASE_POSX, -500, power, angle, 0, 40, 120);
-                                //missile.SetWeapon(x - PLAYER_BASE_POSX, y - PLAYER_BASE_POSY, power, angle, 0);
-                            else sniper.SetWeapon(aim_x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, -500, power, angle, 0, 40, 120);
-                                //missile.SetWeapon(x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, y - PLAYER_BASE_POSY, power, angle, 0);
+                            
+                            if(dir==LEFT) sniper.SetWeapon(aim_x - PLAYER_BASE_POSX, -500, power, angle, 1, 40, 120);
+                            else sniper.SetWeapon(aim_x - PLAYER_BASE_POSX + PLAYER_BASE_DIR, -500, power, angle, 1, 40, 120);
                             sniper.SetMovement();
-                            //missile.SetMovement();
                             state = FIRE;
                             break;
                         }
                     }
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                        ICON_ON = true;
-                        weapon_select = (weapon_select + 1) % 2;
-                        icon_timer = 0;
-                        break;
+                        if(state == MOVE || state == STOP) {
+                            if (master_worm->IsSpecial()) weapon_select = (weapon_select + 1) % 2;
+                            ICON_ON = true;
+                            icon_timer = 0;
+                            break;
+                        }
                     }
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
                         if(state == MOVE || state == STOP) {
                             ICON_ON = false;
 
-                            state = WAIT_POINT;
-                            master_worm->GetPlayerPosition(x, y, dir);
-                            aim.SetAim(x, y);
-                            //state = WAIT_POWER;
-                            power_bar.set_cur_val(0);
-                            power = 0;
+                            if (weapon_select == 0) {
+                                state = WAIT_POWER;
+                                power_bar.set_cur_val(0);
+                                power = 0;
+                            }
+                            else {
+                                master_worm->GetPlayerPosition(x, y, dir);
+                                aim.SetAim(x, y);
+                                state = WAIT_POINT;
+                            }
                             break;
                         }
                         else if(state == WAIT_POWER) {
@@ -297,28 +302,40 @@ void Game::GameLoop() {
                 stamina_bar--;
             }
 
-            if(state == FIRE){
-                x = sniper.GetPosX();
-                y = sniper.GetPosY(); y += SNIPER_Y_TRANS;
-                //x = missile.GetPosX();
-                //y = missile.GetPosY();
-                int delta_x, delta_y;
-                sniper.GetDelta(delta_x, delta_y);
-                delta_y *= -1;
-                //missile.GetDelta(delta_x, delta_y);
+            if(state == FIRE) {
+                if (weapon_select == 0) {
+                    x = missile.GetPosX();
+                    y = missile.GetPosY();
+                    int delta_x, delta_y;
+                    missile.GetDelta(delta_x, delta_y);
+                    delta_y *= -1;
 
-                if (map.CheckCollision(x, y, delta_x, delta_y, sniper.GetValidRange()) || (y >= MAX_MAP_POSY)) {
-                    map.DestroyMap(*window, x + delta_x, y + delta_y, sniper.GetDestroyRange());
-                    //map.DestroyMap(*window, x + delta_x, y + delta_y);
-                    map.LoadMapdata(*window, 1);
-                    DamagePlayers(x + delta_x, y + delta_y, sniper.GetDamage(), master_worm);
-                    //DamagePlayers(x + delta_x, y + delta_y, missile.GetDamage(), master_worm);
-                    break;
+                    if (map.CheckCollision(x, y, delta_x, delta_y, missile.GetValidRange()) || (y >= MAX_MAP_POSY)) {
+                        map.DestroyMap(*window, x + delta_x, y + delta_y, missile.GetDestroyRange());
+                        map.LoadMapdata(*window, 1);
+                        DamagePlayers(x + delta_x, y + delta_y, missile.GetDamage(), master_worm);
+                        break;
+                    }
+                    else missile.UpdateMovement();
                 }
-                else{
-                    sniper.UpdateMovement();
-                    //missile.UpdateMovement();
+
+                else {
+                    x = sniper.GetPosX();
+                    y = sniper.GetPosY(); y += SNIPER_Y_TRANS;
+                    int delta_x, delta_y;
+                    sniper.GetDelta(delta_x, delta_y);
+                    delta_y *= -1;
+
+                    if (map.CheckCollision(x, y, delta_x, delta_y, sniper.GetValidRange()) || (y >= MAX_MAP_POSY)) {
+                        map.DestroyMap(*window, x + delta_x, y + delta_y, sniper.GetDestroyRange());
+                        map.LoadMapdata(*window, 1);
+                        DamagePlayers(x + delta_x, y + delta_y, sniper.GetDamage(), master_worm);
+                        master_worm->UseSpecial();
+                        break;
+                    }
+                    else sniper.UpdateMovement();
                 }
+
                 unsigned int cnt = 0;
                 while(cnt != TIME_LIMIT) cnt++;
             }
@@ -442,8 +459,10 @@ void Game::GameLoop() {
                 angle_arrow.draw_arrow(*window, sf::Color::White);
             }
 
-            //if(state == FIRE) missile.DrawWeaponMovement(*window);
-            if(state == FIRE) sniper.DrawWeaponMovement(*window);
+            if(state == FIRE) {
+                if (weapon_select == 0) missile.DrawWeaponMovement(*window);
+                else sniper.DrawWeaponMovement(*window);
+            }
 
             map.FillWater(*window);
 

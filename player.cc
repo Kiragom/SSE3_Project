@@ -93,6 +93,14 @@ void GamePlayer::PlayerMove() {
     movey = 0;
 }
 
+void GamePlayer::UseSpecial() {
+    special = false;
+}
+
+bool GamePlayer::IsSpecial() {
+    return special;
+}
+
 void GamePlayer::MoveRight() {
     movex += 1;
     if (posx + movex > MAX_MAP_POSX - PLAYER_X_BOUND) movex = MAX_MAP_POSX - PLAYER_X_BOUND - posx;

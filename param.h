@@ -33,8 +33,9 @@
 #define MAX_DIST 100
 #define PI 3.1415926535
 #define GRAVITY 74
-#define MISSILE_DAMAGE 25
-#define MIN_DAMAGE 50
+#define MISSILE_DAMAGE  20
+#define SNIPER_DAMAGE   30
+#define MIN_DAMAGE 10
 
 #define BAR_WIDTH 30
 #define BAR_HEIGHT 5
