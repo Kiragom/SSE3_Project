@@ -14,6 +14,8 @@ class Bar{
         void set_pos(float pos_x_, float pos_y_);
         void set_size(float bar_width_, float bar_height_);
         void set_color(sf::Color bar_color_);
+        Bar& operator+= (float rhs);
+        Bar& operator--(int);
 
     private:
         float max_val, cur_val, pos_x, pos_y, bar_width, bar_height;
@@ -23,7 +25,6 @@ class Bar{
 class Arrow{
     public:
         void set_arrow(float pos_x_, float pos_y_, float angle_);
-        void rotate_arrow(float angle_);
         void draw_arrow(sf::RenderWindow &window, const sf::Color color);
 
     private:

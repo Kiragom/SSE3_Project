@@ -7,13 +7,20 @@ Game::Game(int _xlength, int _ylength) {
     window = new sf::RenderWindow(sf::VideoMode(xlength, ylength), "WORMS SHOOTING GAME");
 }
 
+Game::~Game(void) {
+    delete window;
+    for(int i=0; i<Nteam*Nworm; i++){
+        delete worms[i];
+    }
+}
+
 void Game::Display() {
     window->display();
 }
 
 void Game::StartGame() {
-    Nteam = 2;
-    Nworm = 1;
+    Nteam = NTEAM;
+    Nworm = NWORM;
 
     sf::Color color_list[4] = {sf::Color::Red, sf::Color::Blue, sf::Color::Green, sf::Color::Yellow};
 
@@ -56,7 +63,7 @@ void Game::StartGame() {
 
     sniper.SetObject();
 
-    FLAG_END = -1;
+    FLAG_END = NOT_END;
 }
 
 bool Game::IsOpen() {
@@ -104,6 +111,7 @@ void Game::IsEnd() {
     }
 
     if (cnt == 1) FLAG_END = winner_team;
+    else if(cnt == 0) FLAG_END = DRAW;
 }
 
 void Game::CheckWaterDeath(){
@@ -121,7 +129,7 @@ void Game::CheckWaterDeath(){
 }
 
 void Game::GameLoop() {
-    if (FLAG_END != -1) {
+    if (FLAG_END != NOT_END) {
         EndGame();
     }
 
@@ -275,7 +283,7 @@ void Game::GameLoop() {
 
             master_worm->GetPlayerPosition(x, y, dir);
             if(x != prev_x || y != prev_y) {
-                stamina_bar.dec_val(1);
+                stamina_bar--;
             }
 
             if(state == FIRE){
@@ -306,8 +314,7 @@ void Game::GameLoop() {
 
             if(state == WAIT_POWER){
                 power += power_delta;
-                if(power_delta >= 0) power_bar.inc_val(power_delta);
-                else power_bar.dec_val(-power_delta);
+                power_bar += power_delta;
 
                 if(power >= 100) {
                     power = 100;
@@ -476,20 +483,26 @@ void Game::EndGame() {
     winner.setFont(font);
     winner.setPosition(390, 400);
     switch(FLAG_END) {
-        case 0: {
+        case RED_WIN: {
             winner.setString("Red Team Win!");
             winner.setFillColor(sf::Color::Red);
         } break;
-        case 1: {
+        case BLUE_WIN: {
             winner.setString("Blue Team Win!");
             winner.setFillColor(sf::Color::Blue);
         } break;
-        case 2: {
+        case GREEN_WIN: {
             winner.setString("Green Team Win!");
             winner.setFillColor(sf::Color::Green);
-        } breasize3: {
+        } break;
+        case YELLOW_WIN: {
             winner.setString("Yellow Team Win!");
             winner.setFillColor(sf::Color::Yellow);
+        }
+        case DRAW: {
+            winner.setPosition(660, 400);
+            winner.setString("Draw!");
+            winner.setFillColor(sf::Color::White);
         }
     }
     winner.setCharacterSize(120);

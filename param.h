@@ -20,6 +20,8 @@
 #define SNIPER_X_TRANS          129
 #define SNIPER_Y_TRANS          200
 
+#define NTEAM 2
+#define NWORM 1
 #define TIME_LIMIT  15000000
 #define MAX_STAMINA 250
 #define MAX_HP  100
@@ -42,7 +44,9 @@
 #define LEFT -1
 #define RIGHT 1
 
-enum cur_state{
+#define WATER_INC 15
+
+enum CUR_STATE{
     FIRE,
     MOVE,
     WAIT_POWER,
@@ -51,6 +55,15 @@ enum cur_state{
     STOP,
     JUMP,
     FALL
+};
+
+#define NOT_END -1
+enum END_STATE{
+    RED_WIN,
+    BLUE_WIN,
+    GREEN_WIN,
+    YELLOW_WIN,
+    DRAW
 };
 
 #endif
