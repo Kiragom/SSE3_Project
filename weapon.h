@@ -17,11 +17,13 @@ class GameWeapon {
     float power;
     float angle;
     int count;
-    sf::Sprite weapon_icon;
+    sf::Texture weapon_image;
+    sf::RectangleShape weapon_icon;
 
     public:
     virtual void UpdateMovement() = 0;
     virtual void SetMovement() = 0;
+    virtual void DrawWeaponMovement(sf::RenderWindow &window) = 0;
     void SetWeapon(float _posx, float _posy, float _power, float _angle, int _type, int _vrange, int _drange);
     void SetDamage(float _damage);
     float GetDamage();
@@ -30,7 +32,8 @@ class GameWeapon {
     void GetDelta(int &delta_x, int &delta_y);
     int GetPosX();
     int GetPosY();
-    virtual void DrawWeaponMovement(sf::RenderWindow &window) = 0;
+    virtual void SetWeaponIcon() = 0;
+    void DrawWeaponIcon(sf::RenderWindow &window, int posx, int posy);
 };
 
 #endif

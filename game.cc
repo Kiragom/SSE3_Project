@@ -62,6 +62,7 @@ void Game::StartGame() {
     stamina_bar.set_color(sf::Color::Yellow);
 
     sniper.SetObject();
+    sniper.SetWeaponIcon();
 
     FLAG_END = NOT_END;
 }
@@ -140,8 +141,9 @@ void Game::GameLoop() {
         int x, y, prev_x, prev_y, dir, xdelta, ydelta, player_dir = LEFT, jump_cnt = 0;
         int state = FALL;
         bool initial_fall = true;
+        bool ICON_ON = false;
         float power_delta = POWER_DELTA, angle_delta = ANGLE_DELTA, power = 0, angle = 0;
-        float turn_timer = 0;
+        float turn_timer = 0, icon_timer = 0;
         sf::Clock clock;
 
         if(turn_cnt > Nworm * 3){
@@ -152,7 +154,8 @@ void Game::GameLoop() {
         stamina_bar.set_cur_val(MAX_STAMINA);
         power_bar.set_cur_val(0);
         missile.SetDamage(MISSILE_DAMAGE);
-        sniper.SetDamage(MISSILE_DAMAGE); //////////////////////////
+        sniper.SetDamage(MISSILE_DAMAGE);
+        weapon_select = 0;
 
         if(master_worm->IsDeath()){
             worms.erase(worms.begin());
@@ -203,8 +206,16 @@ void Game::GameLoop() {
                             break;
                         }
                     }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                        ICON_ON = true;
+                        weapon_select = (weapon_select + 1) % 2;
+                        icon_timer = 0;
+                        break;
+                    }
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
                         if(state == MOVE || state == STOP) {
+                            ICON_ON = false;
+
                             state = WAIT_POINT;
                             master_worm->GetPlayerPosition(x, y, dir);
                             aim.SetAim(x, y);
@@ -388,6 +399,16 @@ void Game::GameLoop() {
 
             // set the character size
             text.setCharacterSize(30); // in pixels, not points!
+
+            // draw weapon icon
+            if (ICON_ON) {
+                if (weapon_select == 0) missile.DrawWeaponIcon(*window, x, y);
+                else sniper.DrawWeaponIcon(*window, x, y);
+                icon_timer += time;
+                if (icon_timer > 2) {
+                    ICON_ON = false;
+                }
+            }
 
             // set the color
             text.setFillColor(sf::Color::Black);

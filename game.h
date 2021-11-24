@@ -21,6 +21,7 @@ class Game {
     int Nworm;
     int worm_id;
     int turn_cnt = 0;
+    int weapon_select;
     GameMap map;
     std::vector<class GamePlayer *> worms;
     Bar power_bar;

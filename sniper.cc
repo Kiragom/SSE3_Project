@@ -21,3 +21,9 @@ void Sniper::SetObject() {
     object.setTexture(object_image);
     object.setScale(0.4, 0.4);
 }
+
+void Sniper::SetWeaponIcon() {
+    weapon_image.loadFromFile(SNIPER_ICON_FILE);
+    weapon_icon.setSize(sf::Vector2f(40, 40));
+    weapon_icon.setTexture(&weapon_image);
+}

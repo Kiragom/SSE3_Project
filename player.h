@@ -3,8 +3,6 @@
 #include "param.h"
 #include "indicator.h"
 #include "weapon.h"
-#include "missile.h"
-#include "sniper.h"
 
 #ifndef PLAYER
 #define PLAYER
@@ -16,7 +14,6 @@ class GamePlayer {
     sf::Sprite character_alive;
     sf::Sprite character_death;
     Bar hp_bar;
-    std::vector<GameWeapon *> weapon_list;
 
     int posx;
     int posy;
@@ -29,7 +26,6 @@ class GamePlayer {
 
     public:
     void LoadCharacter();
-    void PushWeapon();
     void SetPlayerPosition(int x, int y, int dir);
     void GetPlayerPosition(int& x, int& y, int& dir);
     void SetPlayerMovement(int xdelta, int ydelta);

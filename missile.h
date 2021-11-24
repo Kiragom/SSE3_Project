@@ -9,6 +9,7 @@ class Missile : public GameWeapon {
     void SetMovement() override;
     void UpdateMovement() override;
     void DrawWeaponMovement(sf::RenderWindow &window) override;
+    void SetWeaponIcon() override;
 };
 
 #endif

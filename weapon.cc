@@ -41,3 +41,8 @@ int GameWeapon::GetPosX() {
 int GameWeapon::GetPosY() {
     return (int)round(posy);
 }
+
+void GameWeapon::DrawWeaponIcon(sf::RenderWindow &window, int posx, int posy) {
+    weapon_icon.setPosition(posx + PLAYER_X_BOUND + 8, posy - PLAYER_Y_BOUND - 44);
+    window.draw(weapon_icon);
+}

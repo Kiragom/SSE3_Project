@@ -11,6 +11,8 @@
 #define FONT_FILE               "example_font.ttf"
 #define WEAPON_SNIPER_FILE      "weapon_sniper_meteor.png"
 #define WATER_FILE              "water_pic.jpg"
+#define MISSILE_ICON_FILE       "missile_icon.png"
+#define SNIPER_ICON_FILE        "sniper_icon.png"
 
 #define PLAYER_BASE_POSX        11
 #define PLAYER_BASE_POSY        30

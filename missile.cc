@@ -19,3 +19,9 @@ void Missile::DrawWeaponMovement(sf::RenderWindow &window) {
     shape.setPosition(sf::Vector2f(posx, posy));
     window.draw(shape);
 }
+
+void Missile::SetWeaponIcon() {
+    weapon_image.loadFromFile(MISSILE_ICON_FILE);
+    weapon_icon.setSize(sf::Vector2f(40, 40));
+    weapon_icon.setTexture(&weapon_image);
+}
