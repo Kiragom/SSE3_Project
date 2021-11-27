@@ -462,8 +462,6 @@ void Game::GameLoop() {
                 else sniper.DrawWeaponMovement(*window);
             }
 
-            map.FillWater(*window);
-
             master_worm->Gravity();
             master_worm->GetPlayerPosition(x, y, dir);
             master_worm->GetPlayerMovement(xdelta, ydelta);
@@ -494,6 +492,7 @@ void Game::GameLoop() {
                 }
             }
 
+            map.FillWater(*window);
             CheckWaterDeath();
             window->display();
         }
