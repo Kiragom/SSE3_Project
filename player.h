@@ -14,7 +14,6 @@ class GamePlayer {
     sf::Sprite character_alive;
     sf::Sprite character_death;
     Bar hp_bar;
-
     int posx;
     int posy;
     int movex;

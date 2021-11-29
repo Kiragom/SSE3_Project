@@ -21,7 +21,7 @@ class GameMap {
     public:
     void LoadBackgorund(sf::RenderWindow &window);
     void SetMapdata(sf::RenderWindow &window);
-    void LoadMapdata(sf::RenderWindow &window, int aaaa);
+    void LoadMapdata(sf::RenderWindow &window, int DELETE);
     
     void InitWater();
     void FillWater(sf::RenderWindow &window);
@@ -32,8 +32,6 @@ class GameMap {
     bool CheckCollision(int& x, int& y, int& xdelta, int& ydelta, int vrange);
     bool CheckCollisionGravity(int& x, int& y, int &xdelta, int &ydelta);
     void CheckGradient(int &x, int &y, int& xdelta, int& ydelta);
-    
-    friend class GamePlayer;
 };
 
 #endif
